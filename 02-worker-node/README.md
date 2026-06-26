@@ -80,19 +80,16 @@ Expected Output
 
 ## Node NotReady
 
-Verification performed
+## Verification Commands
+
+The following commands were used to verify the health and readiness of the newly added worker node.
 
 ```bash
 journalctl -b
-
 journalctl -u kubelet
-
 oc describe node worker-5
-
 oc get csr
-
 oc get mcp
-
 oc get machineconfig
 ```
 
