@@ -85,7 +85,47 @@ oc get csr
 
 oc get pods -A
 ```
+---
 
+# Cluster Verification
+
+## Cluster Nodes
+
+The following output confirms that all control plane and worker nodes are in the **Ready** state.
+
+![Cluster Nodes](images/oc-get-nodes.png)
+
+---
+
+## Cluster Operators
+
+All Cluster Operators are **Available=True**, **Progressing=False** and **Degraded=False**, indicating a healthy OpenShift cluster.
+
+![Cluster Operators](images/oc-get-co.png)
+
+---
+
+## Cluster Version
+
+The cluster is running OpenShift Container Platform **4.21.20**.
+
+![Cluster Version](images/oc-get-clusterversion.png)
+
+---
+
+## OpenShift Web Console
+
+The OpenShift web console provides centralized administration and monitoring of the cluster.
+
+![OpenShift Console](images/web-console-home.png)
+
+---
+
+## VMware Infrastructure
+
+The OpenShift cluster is deployed on VMware ESXi with dedicated control plane and worker virtual machines.
+
+![VMware Infrastructure](images/vmware-esxi-vms.png)
 ---
 
 # Expected Result
