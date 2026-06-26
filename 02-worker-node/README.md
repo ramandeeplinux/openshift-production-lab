@@ -112,3 +112,52 @@ oc get machineconfig
 ✅ Node Ready
 
 ✅ Cluster Healthy
+---
+
+# Screenshots
+
+## CSR Approved
+
+The worker node certificate signing request (CSR) was successfully approved.
+
+![CSR Approved](images/csr-approved.png)
+
+---
+
+## Worker Node Ready
+
+The new worker node successfully joined the OpenShift cluster.
+
+![Worker Ready](images/worker5-ready.png)
+
+---
+
+## Worker Node Details
+
+Node description confirms labels, taints, capacity and networking.
+
+![Worker Describe](images/worker5-describe.png)
+
+---
+
+## MachineConfigPool
+
+MachineConfigPool reports the worker node as updated and healthy.
+
+![MachineConfigPool](images/machineconfigpool.png)
+
+---
+
+## MachineConfig
+
+MachineConfig objects successfully applied to the worker node.
+
+![MachineConfig](images/machineconfig.png)
+
+---
+
+## VMware Worker VM
+
+Worker virtual machine running on VMware ESXi.
+
+![Worker VM](images/worker5-vm.png)
