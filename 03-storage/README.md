@@ -216,6 +216,63 @@ oc get csidriver
 ### How does dynamic provisioning work?
 
 ---
+---
+
+# Verification Screenshots
+
+## Storage Classes
+
+The OpenShift cluster is configured with multiple StorageClasses including TrueNAS CSI.
+
+![StorageClass](images/storageclass.png)
+
+---
+
+## Persistent Volume Claims
+
+PVCs are dynamically provisioned and successfully reach the Bound state.
+
+![PVC](images/pvc-bound.png)
+
+---
+
+## Persistent Volumes
+
+Persistent Volumes are automatically created by the CSI driver.
+
+![Persistent Volumes](images/persistent-volumes.png)
+
+---
+
+## CSI Driver
+
+The TrueNAS CSI Driver is successfully registered in the cluster.
+
+![CSI Driver](images/csidriver.png)
+
+---
+
+## CSI Controller
+
+The CSI Controller pods are running without errors.
+
+![CSI Controller](images/csi-controller.png)
+
+---
+
+## TrueNAS Dashboard
+
+The backend storage platform used for dynamic provisioning.
+
+![TrueNAS](images/truenas-dashboard.png)
+
+---
+
+## OpenShift Storage Console
+
+OpenShift storage resources visible from the web console.
+
+![OpenShift Storage](images/openshift-storage-console.png)
 
 # Final Result
 
