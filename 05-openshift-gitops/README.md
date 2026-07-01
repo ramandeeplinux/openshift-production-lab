@@ -21,3 +21,17 @@ oc get subscription -n openshift-gitops-operator
 oc get csv -n openshift-gitops-operator
 
 oc get pods -n openshift-gitops
+
+OpenShift Console
+
+↓
+
+GitOps
+
+↓
+
+Open ArgoCD
+
+↓
+
+Login
