@@ -15,3 +15,9 @@ This project demonstrates how to deploy and manage applications on OpenShift usi
                    │
                    ▼
       ConfigMap / Deployment / VM
+
+oc get subscription -n openshift-gitops-operator
+
+oc get csv -n openshift-gitops-operator
+
+oc get pods -n openshift-gitops
