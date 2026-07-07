@@ -1,3 +1,9 @@
+Red Hat OpenShift
+Kubernetes
+VMware
+GitOps
+License
+Last Commit
 # 🚀 Red Hat OpenShift Enterprise Platform Engineering Lab
 
 ![OpenShift](https://img.shields.io/badge/OpenShift-4.21-red)
