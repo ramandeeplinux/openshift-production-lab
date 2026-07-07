@@ -1,3 +1,51 @@
+# 🚀 Red Hat OpenShift Enterprise Platform Engineering Lab
+
+![OpenShift](https://img.shields.io/badge/OpenShift-4.21-red)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-1.34-blue)
+![Platform](https://img.shields.io/badge/Platform-Engineering-success)
+![VMware](https://img.shields.io/badge/VMware-vSphere-607078)
+![GitOps](https://img.shields.io/badge/GitOps-ArgoCD-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
+## Overview
+
+This repository documents a production-style Red Hat OpenShift Platform Engineering Lab built completely from scratch on VMware vSphere.
+
+The objective of this repository is to demonstrate real-world platform engineering skills including OpenShift administration, Kubernetes, virtualization, enterprise storage, GitOps, AI/ML, service mesh, observability, and Day-2 operations.
+## Lab Architecture
+
+```text
+VMware ESXi
+      │
+      ▼
+OpenShift 4.21 Cluster
+      │
+      ├── Masters
+      ├── Workers
+      ├── OpenShift Virtualization
+      ├── TrueNAS CSI
+      ├── GitOps
+      ├── Monitoring
+      ├── AI
+      ├── KServe
+      ├── Service Mesh
+      └── Dynatrace
+```
+## Technologies
+
+- Red Hat Enterprise Linux
+- OpenShift Container Platform
+- Kubernetes
+- OpenShift Virtualization (KubeVirt)
+- VMware ESXi
+- TrueNAS CSI (NFS & iSCSI)
+- GitOps (Argo CD)
+- Prometheus
+- Alertmanager
+- OpenShift Monitoring
+- KServe
+- Red Hat AI
+- Service Mesh (Istio)
+- Dynatrace
 # Red Hat OpenShift Enterprise Lab
 
 A production-style Red Hat OpenShift laboratory built on VMware vSphere for learning, validating, and documenting enterprise platform engineering use cases.
@@ -98,3 +146,11 @@ Senior Linux | OpenShift | Kubernetes Platform Engineer
 - Multi-Cluster Management
 - Disaster Recovery
 - Bare Metal Deployment
+- ## Author
+
+Ramandeep Singh
+
+Senior Linux | OpenShift | Kubernetes Platform Engineer
+
+GitHub:
+https://github.com/ramandeeplinux
