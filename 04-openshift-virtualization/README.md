@@ -1,74 +1,87 @@
 # OpenShift Virtualization (KubeVirt)
 
-## Overview
+## Objective
 
-This document demonstrates the deployment and validation of **OpenShift Virtualization (KubeVirt)** on a production-style Red Hat OpenShift 4.21 cluster running on VMware vSphere ESXi.
+This project demonstrates how to deploy and manage virtual machines on Red Hat OpenShift using OpenShift Virtualization (KubeVirt).
 
-The lab showcases enterprise virtualization capabilities including Linux virtual machines, dynamic storage provisioning, secondary networking, live migration and snapshot functionality.
+The implementation includes:
+
+- OpenShift Virtualization Operator
+- KubeVirt
+- TrueNAS NFS CSI
+- TrueNAS iSCSI CSI
+- Dynamic Storage Provisioning
+- Fedora Virtual Machine
+- Live Migration
+- Secondary Network
+- VM Snapshots
+- RWX and RWO Persistent Volumes
 
 ---
 
 # Environment
 
 | Component | Version |
-|-----------|---------|
-| Red Hat OpenShift | 4.21.21 |
+|-----------|----------|
+| OpenShift | 4.21.21 |
 | Kubernetes | 1.34 |
-| VMware vSphere ESXi | 8.x |
-| OpenShift Virtualization | Latest Stable |
-| Storage | TrueNAS CSI (NFS & iSCSI) |
-| Networking | OVN Kubernetes + NMState |
+| VMware ESXi | 8.x |
+| OpenShift Virtualization | Latest |
+| TrueNAS SCALE | 25.x |
+| CSI Driver | TrueNAS CSI |
+| Storage | NFS + iSCSI |
 
 ---
 
 # Architecture
 
-```text
-                   VMware ESXi
-                        │
-                        ▼
-            Red Hat OpenShift 4.21
-      ┌───────────────────────────────┐
-      │        Control Plane          │
-      │         Worker Nodes          │
-      └───────────────────────────────┘
-                        │
-                        ▼
-            OpenShift Virtualization
-                 (KubeVirt)
-                        │
-         ┌──────────────┴──────────────┐
-         │                             │
-         ▼                             ▼
-   Linux Virtual Machines         DataVolumes
-         │                             │
-         └──────────────┬──────────────┘
-                        ▼
-          TrueNAS CSI Storage Backend
-             NFS (RWX) + iSCSI (RWO)
+```
+                     VMware ESXi
+                           │
+                           ▼
+                OpenShift 4.21 Cluster
+                           │
+        ┌──────────────────┼──────────────────┐
+        │                  │                  │
+        ▼                  ▼                  ▼
+ OpenShift           TrueNAS CSI       Secondary Bridge
+ Virtualization      (NFS/iSCSI)          Network
+        │                  │                  │
+        └──────────────┬───┘                  │
+                       ▼                      │
+                 Fedora Virtual Machine ◄────┘
+                       │
+                       ▼
+                Live Migration
 ```
 
 ---
 
 # Features
 
-- OpenShift Virtualization Deployment
-- KubeVirt Platform
+- OpenShift Virtualization
+- KubeVirt
 - Fedora Virtual Machine
-- Dynamic DataVolumes
-- TrueNAS NFS CSI
-- TrueNAS iSCSI CSI
+- Dynamic NFS Storage
+- Dynamic iSCSI Storage
+- RWX PVC
+- RWO PVC
 - Live Migration
-- Virtual Machine Snapshots
-- Secondary Bridge Network
-- Static IP Assignment
+- VM Snapshot
+- Secondary Network
+- Static IP Configuration
+- VM Console Access
 - SSH Access
-- VNC Console
-- Persistent Storage Integration
 
 ---
 
 # Installation Verification
+
+Verify OpenShift Virtualization
+
+```bash
+oc get kubevirt -A
+```
 
 Verify Operator
 
@@ -76,29 +89,11 @@ Verify Operator
 oc get csv -n openshift-cnv
 ```
 
-Verify Pods
+Verify CDI
 
 ```bash
-oc get pods -n openshift-cnv
+oc get cdi
 ```
-
-Verify KubeVirt
-
-```bash
-oc get kubevirt -n openshift-cnv
-```
-
-Expected
-
-```
-Available=True
-Progressing=False
-Degraded=False
-```
-
----
-
-# Storage Validation
 
 Verify Storage Classes
 
@@ -106,110 +101,61 @@ Verify Storage Classes
 oc get sc
 ```
 
-Expected Storage Classes
-
-- truenas-nfs-csi
-- truenas-iscsi-csi
-
 Verify PVC
 
 ```bash
 oc get pvc -A
 ```
 
----
-
-# Virtual Machine Deployment
-
-Create Fedora Virtual Machine
-
-OpenShift Console
-
-```
-Virtualization
-↓
-
-Virtual Machines
-↓
-
-Create Virtual Machine
-
-↓
-
-Fedora
-```
-
-Verify
+Verify Virtual Machines
 
 ```bash
 oc get vm -A
 ```
 
-Verify Running Instance
+---
 
-```bash
-oc get vmi -A
+# Storage Classes
+
+```
+truenas-nfs-csi
+truenas-iscsi-csi
 ```
 
 ---
 
-# Secondary Network
-
-Secondary bridge networking configured using **NMState**.
-
-Verification
-
-```bash
-oc get nncp
-```
-
-Expected
+# Virtual Machines
 
 ```
-STATUS = Available
-SuccessfullyConfigured
+Fedora
+RHEL 9
 ```
 
 ---
 
 # Live Migration
 
-Verify Migration
+Verified successfully.
 
-```bash
-oc get vmim -A
-```
-
-Migration completed successfully without VM downtime.
+Migration completed without downtime.
 
 ---
 
-# Snapshot Validation
+# Secondary Network
 
-```bash
-oc get volumesnapshot -A
+Configured using NMState.
+
+Bridge Interface
+
+```
+br-ex
 ```
 
-Snapshots created successfully.
+Verify
 
----
-
-# Validation Checklist
-
-- OpenShift Virtualization Installed
-- KubeVirt Available
-- Operator Running
-- Fedora Virtual Machine Running
-- Dynamic DataVolume Created
-- TrueNAS NFS CSI Working
-- TrueNAS iSCSI CSI Working
-- Persistent Volume Claims Bound
-- Live Migration Successful
-- Snapshot Successful
-- Secondary Network Configured
-- Static IP Verified
-- SSH Access Verified
-- VM Console Accessible
+```bash
+oc get nncp
+```
 
 ---
 
@@ -217,83 +163,108 @@ Snapshots created successfully.
 
 ## 1. OpenShift Virtualization Operator
 
-![OpenShift Virtualization Operator](images/01-operator-installed.png)
+![OpenShift Virtualization Operator](images/01-operator-installed.PNG)
 
 ---
 
 ## 2. KubeVirt Deployment
 
-![KubeVirt Deployment](images/02-kubevirt-deployed.png)
+![KubeVirt Deployment](images/02-kubevirt-deployed.PNG)
 
 ---
 
 ## 3. Storage Classes
 
-![Storage Classes](images/03-storage-classes.png)
+![Storage Classes](images/03-storage-classes.PNG)
 
 ---
 
 ## 4. Fedora Virtual Machine
 
-![Fedora Virtual Machine](images/04-fedora-vm.png)
+![Fedora VM](images/04-fedora-vm.PNG)
 
 ---
 
 ## 5. Live Migration
 
-![Live Migration](images/05-live-migration.png)
+![Live Migration](images/05-live-migration.PNG)
 
 ---
 
-## 6. Secondary Network Configuration
+## 6. Secondary Network
 
-![Secondary Network](images/06-secondary-network.png)
+![Secondary Network](images/06-secondary-network.PNG)
 
 ---
 
 ## 7. Running Virtual Machine
 
-![Running Virtual Machine](images/07-vm-running.png)
+![Running VM](images/07-vm-running.PNG)
 
 ---
 
-## 8. Virtual Machine Console
+## 8. VM Console
 
-![VM Console](images/08-vm-console.png)
-
----
-
-## 9. Persistent Volume Claims
-
-![Persistent Volume Claims](images/09-pvc-created.png)
+![VM Console](images/08-vm-console.PNG)
 
 ---
 
-## 10. Virtual Machine Snapshot
+## 9. Persistent Volume Claim
 
-![Virtual Machine Snapshot](images/10-snapshot.png)
+![PVC](images/09-pvc-created.PNG)
 
 ---
 
-# Technologies Used
+## 10. Snapshot
 
-- Red Hat OpenShift
-- Kubernetes
+![Snapshot](images/10-snapshot.PNG)
+
+---
+
+# Validation Commands
+
+```bash
+oc get kubevirt -A
+
+oc get vm -A
+
+oc get vmi -A
+
+oc get pvc -A
+
+oc get sc
+
+oc get storageprofile
+
+oc get cdi
+
+oc get nncp
+
+oc get pods -n openshift-cnv
+```
+
+---
+
+# Outcome
+
+Successfully implemented:
+
 - OpenShift Virtualization
 - KubeVirt
-- VMware vSphere ESXi
-- TrueNAS CSI
-- NFS
-- iSCSI
-- OVN Kubernetes
-- NMState
-- Linux
-- RHEL
+- Fedora Virtual Machine
+- Dynamic NFS Storage
+- Dynamic iSCSI Storage
+- Live Migration
+- Secondary Network
+- RWX Storage
+- RWO Storage
+- VM Snapshots
+- Enterprise Virtualization Platform
 
 ---
 
 # References
 
-- https://docs.redhat.com/
-- https://kubevirt.io/
-- https://github.com/kubevirt/kubevirt
+- Red Hat OpenShift Virtualization Documentation
+- KubeVirt Documentation
+- TrueNAS CSI Documentation
