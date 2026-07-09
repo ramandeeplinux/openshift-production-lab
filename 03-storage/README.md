@@ -1,289 +1,205 @@
-# TrueNAS CSI Storage Integration with OpenShift 4.21
+# OpenShift Storage with TrueNAS CSI
+
+## Objective
+
+Integrate TrueNAS SCALE with Red Hat OpenShift using CSI drivers to provide dynamic NFS and iSCSI persistent storage for Kubernetes workloads.
 
 ---
 
-# Project Overview
+# Environment
 
-This document describes the implementation of dynamic storage provisioning for Red Hat OpenShift Container Platform (OCP) 4.21 using TrueNAS Community Edition.
-
-The storage solution provides both NFS (RWX) and iSCSI (RWO) persistent storage using the democratic-csi driver.
-
----
-
-# Objective
-
-The objective of this project is to integrate enterprise-grade storage with OpenShift for persistent application data using CSI (Container Storage Interface).
-
----
-
-# Lab Environment
-
-| Component            | Details                   |
-| -------------------- | ------------------------- |
-| Platform             | VMware ESXi               |
-| OpenShift Version    | 4.21                      |
-| Storage Platform     | TrueNAS Community Edition |
-| CSI Driver           | democratic-csi            |
-| Protocols            | NFS & iSCSI               |
-| Dynamic Provisioning | Enabled                   |
+| Component | Value |
+|-----------|-------|
+| Platform | VMware ESXi |
+| OpenShift Version | 4.21.x |
+| Kubernetes Version | v1.34.x |
+| Storage Platform | TrueNAS SCALE 25.x |
+| CSI Driver | Democratic CSI |
+| Protocols | NFS & iSCSI |
+| Default StorageClass | truenas-nfs-csi |
+| Additional StorageClass | truenas-iscsi-csi |
 
 ---
 
-# Storage Architecture
+# Architecture
 
 ```
-Application
-      │
-      ▼
-Persistent Volume Claim (PVC)
-      │
-      ▼
-StorageClass
-      │
-      ▼
-CSI Driver (democratic-csi)
-      │
-      ▼
-TrueNAS
- ├── NFS (RWX)
- └── iSCSI (RWO)
+                OpenShift Cluster
+                        │
+                        │
+              Persistent Volume Claim
+                        │
+                        │
+                StorageClass (CSI)
+                        │
+        ┌───────────────┴────────────────┐
+        │                                │
+   NFS CSI Driver                 iSCSI CSI Driver
+        │                                │
+        └───────────────┬────────────────┘
+                        │
+                 TrueNAS SCALE
+                        │
+                 Storage Pool (ZFS)
 ```
 
 ---
 
-# Storage Components
+# Features
 
-## TrueNAS
-
-Enterprise NAS platform providing persistent storage.
-
-## democratic-csi
-
-CSI Driver used to provision storage dynamically.
-
-## StorageClass
-
-Defines storage provisioning policy.
-
-## Persistent Volume (PV)
-
-Automatically created after PVC request.
-
-## Persistent Volume Claim (PVC)
-
-Requested by applications for persistent storage.
+- Dynamic PVC Provisioning
+- CSI Driver Integration
+- NFS ReadWriteMany (RWX)
+- iSCSI ReadWriteOnce (RWO)
+- Automatic Persistent Volume Creation
+- Kubernetes Native Storage
+- Production Ready Storage Platform
 
 ---
 
-# NFS Storage
-
-### Features
-
-* ReadWriteMany (RWX)
-* Dynamic Provisioning
-* Shared Storage
-* Multiple Pods can access simultaneously
-
-Example StorageClass
-
-```yaml
-provisioner: org.democratic-csi.nfs
-```
-
----
-
-# iSCSI Storage
-
-### Features
-
-* ReadWriteOnce (RWO)
-* High Performance
-* Block Storage
-* Dedicated Volume
-
-Example StorageClass
-
-```yaml
-provisioner: org.democratic-csi.iscsi
-```
-
----
-
-# Storage Validation
-
-Verify StorageClass
-
-```bash
-oc get storageclass
-```
-
-Verify PVC
-
-```bash
-oc get pvc
-```
-
-Verify Persistent Volume
-
-```bash
-oc get pv
-```
-
-Verify CSI Driver
-
-```bash
-oc get csidriver
-```
-
----
-
-# Test Pod
-
-Deploy a sample Pod using the PVC.
-
-```bash
-oc apply -f pvc.yaml
-
-oc apply -f pod.yaml
-```
-
-Verify
-
-```bash
-oc get pods
-
-oc describe pvc
-
-oc exec -it <pod-name> -- df -h
-```
-
----
-
-# Troubleshooting
-
-### PVC Pending
-
-Check
-
-```bash
-oc describe pvc
-```
-
-### CSI Controller
-
-```bash
-oc get pods -n democratic-csi
-```
-
-### StorageClass
-
-```bash
-oc get storageclass
-```
-
-### CSI Driver
-
-```bash
-oc get csidriver
-```
-
----
-
-# Lessons Learned
-
-* Validate TrueNAS connectivity before deployment.
-* Verify CSI Controller is running.
-* Use RWX for shared workloads.
-* Use RWO for databases and block storage.
-* Always validate StorageClass before creating PVCs.
-
----
-
-# Interview Questions
-
-### What is CSI?
-
-### Difference between PV and PVC?
-
-### Difference between NFS and iSCSI?
-
-### Difference between RWX and RWO?
-
-### Why use StorageClass?
-
-### What happens when a PVC is created?
-
-### How does dynamic provisioning work?
-
----
----
-
-# Verification Screenshots
+# Verification Commands
 
 ## Storage Classes
 
-The OpenShift cluster is configured with multiple StorageClasses including TrueNAS CSI.
-
-![StorageClass](images/storageclass.png)
+```bash
+oc get storageclass
+```
 
 ---
 
 ## Persistent Volume Claims
 
-PVCs are dynamically provisioned and successfully reach the Bound state.
-
-![PVC](images/pvc-bound.png)
+```bash
+oc get pvc -A
+```
 
 ---
 
 ## Persistent Volumes
 
-Persistent Volumes are automatically created by the CSI driver.
+```bash
+oc get pv
+```
+
+---
+
+## CSI Drivers
+
+```bash
+oc get csidriver
+```
+
+---
+
+## CSI Controller Pods
+
+```bash
+oc get pods -n democratic-csi
+```
+
+---
+
+# Screenshots
+
+## 1. TrueNAS Dashboard
+
+TrueNAS storage pool configured and healthy.
+
+![TrueNAS Dashboard](images/truenas-dashboard.png)
+
+---
+
+## 2. Storage Classes
+
+OpenShift StorageClasses successfully created.
+
+```bash
+oc get storageclass
+```
+
+![Storage Classes](images/storageclass.png)
+
+---
+
+## 3. Persistent Volume Claims
+
+PVCs dynamically provisioned by TrueNAS CSI.
+
+```bash
+oc get pvc -A
+```
+
+![PVC Bound](images/pvc-bound.png)
+
+---
+
+## 4. Persistent Volumes
+
+Persistent Volumes automatically created.
+
+```bash
+oc get pv
+```
 
 ![Persistent Volumes](images/persistent-volumes.png)
 
 ---
 
-## CSI Driver
+## 5. CSI Driver
 
-The TrueNAS CSI Driver is successfully registered in the cluster.
+CSI Driver successfully registered.
+
+```bash
+oc get csidriver
+```
 
 ![CSI Driver](images/csidriver.png)
 
 ---
 
-## CSI Controller
+## 6. CSI Controller
 
-The CSI Controller pods are running without errors.
+CSI Controller Pods running successfully.
+
+```bash
+oc get pods -n democratic-csi
+```
 
 ![CSI Controller](images/csi-controller.png)
 
 ---
 
-## TrueNAS Dashboard
+# Outcome
 
-The backend storage platform used for dynamic provisioning.
+Successfully integrated TrueNAS SCALE with OpenShift using Democratic CSI.
 
-![TrueNAS](images/truenas-dashboard.png)
+### Achievements
+
+- ✅ Dynamic Storage Provisioning
+- ✅ NFS RWX Storage
+- ✅ iSCSI RWO Storage
+- ✅ CSI Driver Installed
+- ✅ Automatic PV Creation
+- ✅ PVC Successfully Bound
+- ✅ Production Ready Storage Platform
 
 ---
 
-## OpenShift Storage Console
+# Technologies Used
 
-OpenShift storage resources visible from the web console.
+- OpenShift
+- Kubernetes
+- TrueNAS SCALE
+- Democratic CSI
+- NFS
+- iSCSI
+- ZFS
+- VMware ESXi
 
-![OpenShift Storage](images/openshift-storage-console.png)
+---
 
-# Final Result
+# Next Lab
 
-✅ TrueNAS successfully integrated with OpenShift
+➡️ **04-openshift-virtualization**
 
-✅ Dynamic Storage Provisioning Working
-
-✅ NFS RWX Storage Functional
-
-✅ iSCSI RWO Storage Functional
-
-✅ PVC Automatically Provisioned
-
-✅ Storage Ready for Production Workloads
+Deploy OpenShift Virtualization (KubeVirt), create Fedora virtual machines, configure live migration and integrate virtual workloads with the TrueNAS CSI storage platform.
