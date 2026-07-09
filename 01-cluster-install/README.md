@@ -1,152 +1,187 @@
-# OpenShift 4.21 UPI Production Cluster Installation on VMware ESXi
+# OpenShift Cluster Installation
+
+## Objective
+
+Deploy a production-style Red Hat OpenShift Container Platform 4.21 cluster on VMware vSphere using the User Provisioned Infrastructure (UPI) method.
 
 ---
 
-# Project Overview
+# Environment
 
-This document describes the deployment of a Red Hat OpenShift Container Platform (OCP) 4.21 UPI Production Cluster on VMware ESXi.
-
-The objective of this project is to build an enterprise-grade OpenShift environment suitable for learning production administration, virtualization, GitOps, storage integration and monitoring.
-
----
-
-# Lab Environment
-
-| Component | Details |
-|-----------|---------|
-| Platform | VMware ESXi |
+| Component | Value |
+|-----------|-------|
+| Platform | VMware vSphere ESXi |
 | Installation Method | UPI |
-| OpenShift Version | 4.21 |
-| Masters | 3 |
-| Workers | 6 |
-| Bootstrap | 1 |
-| Storage | TrueNAS CSI |
-| Monitoring | Prometheus + Grafana |
-| GitOps | ArgoCD |
-| Virtualization | OpenShift Virtualization |
+| OpenShift Version | 4.21.x |
+| Kubernetes Version | v1.34.x |
+| Control Plane | 3 Masters |
+| Worker Nodes | 6 Workers |
+| Bastion Host | RHEL 9 |
+| DNS | Windows Server 2019 |
+| Storage | TrueNAS SCALE |
+| Container Runtime | CRI-O |
 
 ---
 
-# Infrastructure
+# Architecture
 
-## Virtual Machines
-
-| Host | Role |
-|------|------|
-| bootstrap | Bootstrap |
-| master-0 | Control Plane |
-| master-1 | Control Plane |
-| master-2 | Control Plane |
-| worker-0 | Compute |
-| worker-1 | Compute |
-| worker-2 | Compute |
-| worker-3 | Compute |
-| worker-4 | Compute |
-| worker-5 | Compute |
-
----
-
-# Major Components
-
-- HAProxy
-- DNS
-- Ignition
-- RHCOS
-- Machine Config Operator
-- Cluster Version Operator
+```
+                    VMware ESXi
+                         │
+        ┌──────────────────────────────────┐
+        │                                  │
+   Bastion Host                       Windows DNS
+        │
+        │
+  OpenShift Cluster
+        │
+ ┌──────┴──────────────┐
+ │                     │
+Masters (3)       Workers (6)
+ │                     │
+ └──────────────┬──────┘
+                │
+        OpenShift Platform
+```
 
 ---
 
 # Installation Workflow
 
-1. Prepare DNS
-2. Configure HAProxy
-3. Generate Ignition Files
-4. Boot Bootstrap Node
-5. Boot Master Nodes
-6. Complete Bootstrap Process
-7. Remove Bootstrap Node
-8. Boot Worker Nodes
-9. Approve CSRs
-10. Verify Cluster Health
+- VMware ESXi Infrastructure Preparation
+- Bastion Host Configuration
+- DNS Configuration
+- Download OpenShift Installer
+- Generate Ignition Files
+- Create Bootstrap VM
+- Create Master Nodes
+- Create Worker Nodes
+- CSR Approval
+- Cluster Installation Completion
+- Worker Node Scaling
+- Health Verification
 
 ---
 
 # Verification Commands
 
+## Cluster Version
+
 ```bash
-oc get nodes
-
-oc get co
-
 oc get clusterversion
-
-oc get csr
-
-oc get pods -A
 ```
----
-
-# Cluster Verification
-
-## Cluster Nodes
-
-The following output confirms that all control plane and worker nodes are in the **Ready** state.
-
-![Cluster Nodes](images/oc-get-nodes.png)
 
 ---
 
 ## Cluster Operators
 
-All Cluster Operators are **Available=True**, **Progressing=False** and **Degraded=False**, indicating a healthy OpenShift cluster.
+```bash
+oc get co
+```
+
+---
+
+## Cluster Nodes
+
+```bash
+oc get nodes
+```
+
+---
+
+## Expected Result
+
+- Cluster Installation Successful
+- All Masters Ready
+- All Workers Ready
+- All Operators Available
+- Cluster Version Healthy
+
+---
+
+# Screenshots
+
+## 1. VMware Infrastructure
+
+OpenShift virtual machines running on VMware ESXi.
+
+![VMware Infrastructure](images/vmware-esxi-vms.png)
+
+---
+
+## 2. Cluster Nodes
+
+All control plane and worker nodes are in Ready state.
+
+```bash
+oc get nodes
+```
+
+![Cluster Nodes](images/oc-get-nodes.png)
+
+---
+
+## 3. Cluster Operators
+
+All cluster operators are healthy.
+
+```bash
+oc get co
+```
 
 ![Cluster Operators](images/oc-get-co.png)
 
 ---
 
-## Cluster Version
+## 4. Cluster Version
 
-The cluster is running OpenShift Container Platform **4.21.20**.
+Cluster successfully upgraded and available.
+
+```bash
+oc get clusterversion
+```
 
 ![Cluster Version](images/oc-get-clusterversion.png)
 
 ---
 
-## OpenShift Web Console
+## 5. OpenShift Web Console
 
-The OpenShift web console provides centralized administration and monitoring of the cluster.
+Cluster overview from the OpenShift Web Console.
 
-![OpenShift Console](images/web-console-home.png)
-
----
-
-## VMware Infrastructure
-
-The OpenShift cluster is deployed on VMware ESXi with dedicated control plane and worker virtual machines.
-
-![VMware Infrastructure](images/vmware-esxi-vms.png)
----
-
-# Expected Result
-
-- All Cluster Operators Available
-- All Nodes Ready
-- No Degraded Operators
-- Cluster Version Stable
+![OpenShift Web Console](images/web-console-home.png)
 
 ---
 
-# Lessons Learned
+# Outcome
 
-- Validate DNS before installation.
-- Keep HAProxy configuration simple.
-- Verify time synchronization.
-- Approve pending CSRs immediately.
-- Always verify Cluster Operators after installation.
+Successfully deployed a production-grade Red Hat OpenShift 4.21 cluster on VMware ESXi using the UPI installation method with:
+
+- 3 Control Plane Nodes
+- 6 Worker Nodes
+- Bastion Host
+- Windows DNS
+- Healthy Cluster Operators
+- Production-ready Kubernetes Platform
 
 ---
 
-# Status
+# Technologies Used
 
-✅ Successfully Deployed
+- Red Hat OpenShift
+- Kubernetes
+- VMware ESXi
+- RHEL 9
+- CRI-O
+- CoreOS
+- Ignition
+- Bash
+- SSH
+
+---
+
+# Next Lab
+
+➡️ **02-worker-node**
+
+Adding a new worker node to the production OpenShift cluster.
