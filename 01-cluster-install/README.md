@@ -351,7 +351,7 @@ nslookup worker-1.ocp4.example.com
 
 ### Output
 
-![DNS Validation from Bastion Host](images/08-dns-validation.png)
+![DNS Validation from Bastion Host](images/08-dns-validation.PNG)
 
 > **Figure 8.** Successful DNS resolution of the OpenShift API, bootstrap, control plane, and worker nodes from the bastion host.
 
