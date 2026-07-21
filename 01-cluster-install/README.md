@@ -270,7 +270,9 @@ Expected Output
 
 📷 **Screenshot**
 
-`images/06-verify-openshift-version.png`
+![Verify OpenShift Installation](images/06-verify-openshift-installation.PNG)
+
+> **Figure 6.** Verification of the installed OpenShift Client and Installer versions.
 
 ---
 
