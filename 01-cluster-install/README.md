@@ -257,23 +257,34 @@ sudo chmod +x \
 
 ### Verify Installation
 
+Verify that both the OpenShift Client (`oc`) and OpenShift Installer (`openshift-install`) are installed successfully and that their versions match the target OpenShift release.
+
+### Commands
+
 ```bash
 oc version --client
 
 openshift-install version
 ```
 
-Expected Output
+### Expected Output
 
 - OpenShift Client Version: **4.21.2**
 - OpenShift Installer Version: **4.21.2**
 
-📷 **Screenshot**
+### Output
 
-![Verify OpenShift Installation](images/06-verify-openshift-installation.PNG)
+![Verify OpenShift Client and Installer](images/06-verify-openshift-installation.PNG)
 
-> **Figure 6.** Verification of the installed OpenShift Client and Installer versions.
+> **Figure 6.** Verification of the installed OpenShift Client (`oc`) and OpenShift Installer versions.
 
+The output confirms that both the OpenShift Client and Installer have been installed successfully and are running the same release version. Using matching versions helps ensure compatibility throughout the cluster installation process.
+
+### Notes
+
+- Always use the same version of the OpenShift Client and Installer.
+- Verify the binaries before generating installation assets.
+- Store the binaries in `/usr/local/bin` so they are accessible system-wide.
 ---
 
 ### Verification Checklist
