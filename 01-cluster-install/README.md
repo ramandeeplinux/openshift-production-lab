@@ -274,7 +274,7 @@ openshift-install version
 
 ### Output
 
-![Verify OpenShift Client and Installer](images/06-verify-openshift-installation.PNG)
+![Verify OpenShift Client and Installer](images/06-verify-openshift-version.PNG)
 
 > **Figure 6.** Verification of the installed OpenShift Client (`oc`) and OpenShift Installer versions.
 
