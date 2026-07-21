@@ -135,7 +135,7 @@ Senior Linux | OpenShift | Kubernetes Platform Engineer
 
 **Certifications**
 
-- RHCE
+- Red Hat Certified Engineer
 - Red Hat Certified Specialist in OpenShift Administration (EX280)
 - CKA
 - CKS
