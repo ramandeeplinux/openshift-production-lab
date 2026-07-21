@@ -191,7 +191,11 @@ timedatectl
 
 ### Download OpenShift Client & Installer
 
+Download the **OpenShift Client (`oc`)** and **OpenShift Installer (`openshift-install`)** binaries from the official Red Hat mirror. Ensure that both binaries match the target OpenShift cluster version.
+
 > **Note:** Download the OpenShift Client and Installer versions that match your target OpenShift cluster version.
+
+### Commands
 
 ```bash
 cd /tmp
@@ -201,19 +205,19 @@ wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/4.21.2/ope
 wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/4.21.2/openshift-install-linux.tar.gz
 ```
 
-📷 **Screenshot**
-
 ### Output
 
 ![Download OpenShift Client and Installer](images/03-download-openshift-binaries.png)
 
 > **Figure 3.** Downloading the OpenShift Client (`oc`) and OpenShift Installer binaries from the official Red Hat mirror.
 
+The OpenShift Client and Installer archives were successfully downloaded from the official Red Hat mirror. These binaries will be extracted and installed on the bastion host in the next step.
+
 ### Notes
 
-- Download the client and installer from the official Red Hat mirror only.
-- Always use the same version of the OpenShift Client and Installer as the target OpenShift cluster version.
-- Store the downloaded archives in a temporary working directory before extracting them.
+- Download the client and installer only from the official Red Hat mirror.
+- Ensure both binaries match the target OpenShift cluster version.
+- Keep the downloaded archives in a temporary working directory before extraction.
 
 ---
 
