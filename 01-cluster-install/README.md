@@ -299,7 +299,70 @@ The output confirms that both the OpenShift Client and Installer have been insta
 
 ### Step 02: DNS Configuration
 
-> `images/03-dns-configuration.png`
+Configure the required DNS records in **Windows Active Directory DNS** before starting the OpenShift installation. Proper DNS resolution is essential for communication between the bootstrap node, control plane nodes, worker nodes, and the OpenShift API.
+
+### Configure DNS Records
+
+Create the following DNS records in the DNS Manager.
+
+| Record | Type | Description |
+|--------|------|-------------|
+| api.ocp4.example.com | A | OpenShift API Virtual IP |
+| api-int.ocp4.example.com | A | Internal OpenShift API Virtual IP |
+| *.apps.ocp4.example.com | A | OpenShift Applications Virtual IP |
+| bootstrap.ocp4.example.com | A | Bootstrap Node |
+| master-0.ocp4.example.com | A | Control Plane Node 0 |
+| master-1.ocp4.example.com | A | Control Plane Node 1 |
+| master-2.ocp4.example.com | A | Control Plane Node 2 |
+| worker-0.ocp4.example.com | A | Worker Node 0 |
+| worker-1.ocp4.example.com | A | Worker Node 1 |
+
+### Output
+
+![Windows Active Directory DNS Records](images/07-dns-records.PNG)
+
+> **Figure 7.** Windows Active Directory DNS records configured for the OpenShift cluster.
+
+---
+
+### Validate DNS Resolution
+
+Verify that all DNS records resolve successfully from the bastion host.
+
+### Commands
+
+```bash
+nslookup api.ocp4.example.com
+
+nslookup api-int.ocp4.example.com
+
+nslookup bootstrap.ocp4.example.com
+
+nslookup master-0.ocp4.example.com
+
+nslookup master-1.ocp4.example.com
+
+nslookup master-2.ocp4.example.com
+
+nslookup worker-0.ocp4.example.com
+
+nslookup worker-1.ocp4.example.com
+```
+
+### Output
+
+![DNS Validation from Bastion Host](images/08-dns-validation.png)
+
+> **Figure 8.** Successful DNS resolution of the OpenShift API, bootstrap, control plane, and worker nodes from the bastion host.
+
+The successful `nslookup` results confirm that all required DNS records are correctly configured and reachable from the bastion host. This verification must be completed before generating the OpenShift installation assets.
+
+### Notes
+
+- Verify all DNS records before starting the installation.
+- Ensure both API and Applications Virtual IPs resolve correctly.
+- Confirm that all cluster node hostnames resolve to their assigned static IP addresses.
+- Any DNS resolution failure should be corrected before proceeding with the OpenShift installation.
 
 ---
 
