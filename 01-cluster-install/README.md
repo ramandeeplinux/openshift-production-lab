@@ -230,7 +230,7 @@ tar -xvf openshift-install-linux.tar.gz
 ```
 
 📷 **Screenshot**
-![Extract OpenShift Binaries](images/04-extract-openshift-binaries.PNG)
+![Extract OpenShift Binaries](images/04-extract-openshift-binaries.png)
 
 > **Figure 4.** Extracting the OpenShift Client and Installer archives.
 
@@ -249,7 +249,7 @@ sudo chmod +x \
 
 📷 **Screenshot**
 
-![Install OpenShift Binaries](images/05-install-openshift-binaries.png)
+![Install OpenShift Binaries](images/05-install-openshift-binaries.PNG)
 
 > **Figure 5.** Installing the OpenShift Client, `kubectl`, and OpenShift Installer into `/usr/local/bin`.
 
