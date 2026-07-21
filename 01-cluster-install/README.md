@@ -146,26 +146,112 @@ Access OpenShift Web Console
 
 ## 🚀 Installation Guide
 
-### Step 01: Bastion Host Preparation
+## Step 01: Bastion Host Preparation
 
-**Objective**
+### Objective
 
-Prepare the bastion host with all required software packages and verify the OpenShift installation tools.
+The bastion host serves as the administration node for the entire OpenShift installation. It is responsible for generating installation assets, managing the deployment process, interacting with the OpenShift cluster using the `oc` CLI, and hosting supporting services during installation.
 
-**Commands**
+Before starting the deployment, the bastion host must be properly configured with the required operating system packages, OpenShift installation binaries, network connectivity, and administrative privileges.
+
+---
+
+### Tasks Performed
+
+- Installed Red Hat Enterprise Linux 9.
+- Configured hostname and static IP address.
+- Updated all operating system packages.
+- Installed required utilities.
+- Downloaded the OpenShift Installer.
+- Downloaded the OpenShift CLI (`oc`).
+- Configured SSH access.
+- Verified internet connectivity.
+- Prepared the working directory for cluster installation.
+
+---
+
+### Commands
+
+#### Verify Hostname
 
 ```bash
 hostnamectl
-ip a
+```
+
+#### Verify Network Configuration
+
+```bash
+ip addr
+```
+
+#### Verify DNS Resolution
+
+```bash
+ping console.redhat.com
+```
+
+#### Verify OpenShift Client
+
+```bash
 oc version
+```
+
+#### Verify OpenShift Installer
+
+```bash
 openshift-install version
 ```
 
-**Screenshot**
+---
 
-> `images/02-bastion-host-preparation.png`
+### Expected Output
+
+The following conditions should be verified before proceeding.
+
+| Validation | Status |
+|------------|--------|
+| Hostname configured | ✅ |
+| Static IP configured | ✅ |
+| Internet connectivity | ✅ |
+| DNS resolution working | ✅ |
+| OpenShift CLI installed | ✅ |
+| OpenShift Installer installed | ✅ |
 
 ---
+
+### Screenshot
+
+> 📷 `images/02-bastion-host-preparation.png`
+
+---
+
+### Validation
+
+The bastion host is considered ready when:
+
+- The operating system is fully updated.
+- Network connectivity is available.
+- DNS resolution is functioning correctly.
+- The OpenShift CLI is accessible.
+- The OpenShift Installer version matches the target OpenShift release.
+- The user can successfully execute administrative commands without errors.
+
+---
+
+### Production Notes
+
+- Keep the OpenShift Installer (`openshift-install`) and OpenShift Client (`oc`) at the same version.
+- Use a dedicated bastion host instead of performing the installation from a workstation.
+- Synchronize the system time using NTP before starting the installation.
+- Ensure passwordless SSH connectivity to all cluster nodes.
+- Maintain a dedicated working directory to store installation assets and Ignition files.
+
+---
+
+### Lessons Learned
+
+A properly prepared bastion host minimizes deployment issues and provides a consistent environment for cluster installation. Verifying all prerequisites before generating installation assets helps avoid installation failures later in the deployment process.
+
 
 ### Step 02: DNS Configuration
 
