@@ -203,7 +203,17 @@ wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/4.21.2/ope
 
 📷 **Screenshot**
 
-`images/03-download-openshift-binaries.png`
+### Output
+
+![Download OpenShift Client and Installer](images/03-download-openshift-binaries.png)
+
+> **Figure 3.** Downloading the OpenShift Client (`oc`) and OpenShift Installer binaries from the official Red Hat mirror.
+
+### Notes
+
+- Download the client and installer from the official Red Hat mirror only.
+- Always use the same version of the OpenShift Client and Installer as the target OpenShift cluster version.
+- Store the downloaded archives in a temporary working directory before extracting them.
 
 ---
 
