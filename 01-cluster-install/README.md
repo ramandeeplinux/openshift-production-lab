@@ -58,7 +58,7 @@ This guide is based on an actual production-style lab deployment and includes re
 ## 🏗️ High-Level Architecture
 
 ```text
-                           Windows AD DNS
+Windows AD DNS
         │
         │
 Bastion Host ───── HAProxy
