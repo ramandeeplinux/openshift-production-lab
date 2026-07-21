@@ -319,7 +319,7 @@ Create the following DNS records in the DNS Manager.
 
 ### Output
 
-![Windows Active Directory DNS Records](images/07-dns-records.PNG)
+![Windows Active Directory DNS Records](images/07-dns-records.png)
 
 > **Figure 7.** Windows Active Directory DNS records configured for the OpenShift cluster.
 
