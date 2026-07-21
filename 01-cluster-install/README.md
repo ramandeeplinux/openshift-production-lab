@@ -58,26 +58,30 @@ This guide is based on an actual production-style lab deployment and includes re
 ## 🏗️ High-Level Architecture
 
 ```text
-                           VMware vSphere ESXi
-                                     │
-        ┌────────────────────────────┴────────────────────────────┐
-        │                                                         │
-        ▼                                                         ▼
-  Bastion Host                                            External HAProxy
-        │                                                         │
-        └────────────────────────────┬────────────────────────────┘
-                                     │
-                                     ▼
-                             Bootstrap Node
-                                     │
-                                     ▼
-                        Control Plane (3 Nodes)
-                                     │
-                                     ▼
-                               Worker Nodes
-                                     │
-                                     ▼
-               Red Hat OpenShift Container Platform 4.21
+                           Windows AD DNS
+        │
+        │
+Bastion Host ───── HAProxy
+        │
+        │
+VMware ESXi Cluster
+        │
+ ┌───────────────┐
+ │ Bootstrap VM  │
+ └───────────────┘
+        │
+ ┌───────────────┐
+ │ Master-0      │
+ │ Master-1      │
+ │ Master-2      │
+ └───────────────┘
+        │
+ ┌───────────────┐
+ │ Worker-0      │
+ │ Worker-1      │
+ └───────────────┘
+        │
+   OpenShift 4.21
 ```
 
 ### Screenshot
