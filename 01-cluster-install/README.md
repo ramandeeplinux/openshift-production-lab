@@ -84,9 +84,6 @@ VMware ESXi Cluster
    OpenShift 4.21
 ```
 
-### Screenshot
-
-> `images/01-lab-architecture.png`
 
 ---
 
