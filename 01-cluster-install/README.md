@@ -231,7 +231,9 @@ tar -xvf openshift-install-linux.tar.gz
 
 📷 **Screenshot**
 
-`images/04-extract-binaries.png`
+![Download OpenShift Client](images/04-download-openshift-binaries.png)
+
+> **Figure 4.** Downloading the OpenShift Client and Installer binaries from the official Red Hat mirror.
 
 ---
 
