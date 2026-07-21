@@ -1,187 +1,350 @@
-# OpenShift Cluster Installation
+# 🚀 OpenShift 4.21 UPI Cluster Installation on VMware vSphere
 
-## Objective
-
-Deploy a production-style Red Hat OpenShift Container Platform 4.21 cluster on VMware vSphere using the User Provisioned Infrastructure (UPI) method.
+> Production-style deployment of Red Hat OpenShift Container Platform 4.21 using User-Provisioned Infrastructure (UPI) on VMware vSphere ESXi.
 
 ---
 
-# Environment
+# 📖 Overview
 
-| Component | Value |
-|-----------|-------|
-| Platform | VMware vSphere ESXi |
-| Installation Method | UPI |
-| OpenShift Version | 4.21.x |
-| Kubernetes Version | v1.34.x |
-| Control Plane | 3 Masters |
-| Worker Nodes | 6 Workers |
-| Bastion Host | RHEL 9 |
-| DNS | Windows Server 2019 |
-| Storage | TrueNAS SCALE |
-| Container Runtime | CRI-O |
+This document provides a complete walkthrough for deploying a highly available Red Hat OpenShift 4.21 cluster using the User-Provisioned Infrastructure (UPI) installation method.
+
+The deployment was performed on VMware vSphere ESXi with external HAProxy, Windows Active Directory DNS, static IP addressing, and manually injected Ignition configurations. Every stage of the deployment was validated to ensure the cluster was ready for enterprise workloads.
 
 ---
 
-# Architecture
+# 🎯 Objectives
 
-```
-                    VMware ESXi
-                         │
-        ┌──────────────────────────────────┐
-        │                                  │
-   Bastion Host                       Windows DNS
-        │
-        │
-  OpenShift Cluster
-        │
- ┌──────┴──────────────┐
- │                     │
-Masters (3)       Workers (6)
- │                     │
- └──────────────┬──────┘
-                │
-        OpenShift Platform
+- Deploy OpenShift 4.21 using the UPI installation model.
+- Configure VMware virtual machines for bootstrap, control plane, and worker nodes.
+- Configure external DNS and HAProxy load balancing.
+- Generate and inject Ignition files.
+- Validate cluster health after installation.
+- Document the complete installation process with screenshots and verification commands.
+
+---
+
+# 🏗 Lab Architecture
+
+```text
+                    VMware vSphere ESXi
+                            │
+        ┌───────────────────┴───────────────────┐
+        │                                       │
+        ▼                                       ▼
+   Bootstrap Node                    Control Plane Nodes
+                                            │
+                                            ▼
+                                     Worker Nodes
+                                            │
+                                            ▼
+                               OpenShift 4.21 Cluster
 ```
 
----
-
-# Installation Workflow
-
-- VMware ESXi Infrastructure Preparation
-- Bastion Host Configuration
-- DNS Configuration
-- Download OpenShift Installer
-- Generate Ignition Files
-- Create Bootstrap VM
-- Create Master Nodes
-- Create Worker Nodes
-- CSR Approval
-- Cluster Installation Completion
-- Worker Node Scaling
-- Health Verification
+> 📷 **Screenshot Placeholder**
+>
+> `images/01-lab-architecture.png`
 
 ---
 
-# Verification Commands
+# 🖥 Lab Environment
 
-## Cluster Version
+| Component | Details |
+|-----------|---------|
+| OpenShift Version | 4.21.21 |
+| Kubernetes | v1.34.x |
+| Deployment Model | User-Provisioned Infrastructure (UPI) |
+| Hypervisor | VMware vSphere ESXi |
+| DNS | Windows Active Directory DNS |
+| Load Balancer | External HAProxy |
+| Network | Static IP |
+| Storage | TrueNAS CSI |
+| Platform | Red Hat Enterprise Linux |
+
+---
+
+# 📋 Deployment Workflow
+
+```text
+Environment Preparation
+        │
+        ▼
+DNS Configuration
+        │
+        ▼
+HAProxy Configuration
+        │
+        ▼
+Create Installation Assets
+        │
+        ▼
+Deploy Bootstrap Node
+        │
+        ▼
+Deploy Master Nodes
+        │
+        ▼
+Bootstrap Complete
+        │
+        ▼
+Deploy Worker Nodes
+        │
+        ▼
+Approve CSR Requests
+        │
+        ▼
+Cluster Validation
+        │
+        ▼
+OpenShift Console Ready
+```
+
+---
+
+# 🚀 Installation Steps
+
+## Step 1 — Environment Preparation
+
+### Description
+
+Prepare the bastion host with all required tools and verify the OpenShift installer version.
+
+### Commands
 
 ```bash
-oc get clusterversion
+hostnamectl
+ip a
+oc version
+openshift-install version
 ```
+
+### Expected Result
+
+The bastion host is ready with the correct OpenShift client and installer versions.
+
+📷 **Screenshot Placeholder**
+
+`images/02-environment-preparation.png`
 
 ---
 
-## Cluster Operators
+## Step 2 — DNS Configuration
+
+### Description
+
+Create and validate all required DNS records before deploying any virtual machines.
+
+### Commands
 
 ```bash
-oc get co
+nslookup api.ocp4.example.com
+nslookup api-int.ocp4.example.com
+nslookup bootstrap.ocp4.example.com
 ```
+
+### Expected Result
+
+All DNS records resolve successfully.
+
+📷 **Screenshot Placeholder**
+
+`images/03-dns-validation.png`
 
 ---
 
-## Cluster Nodes
+## Step 3 — Configure API & Apps VIP
+
+### Commands
+
+```bash
+ip addr show
+```
+
+📷 **Screenshot Placeholder**
+
+`images/04-vip-configuration.png`
+
+---
+
+## Step 4 — HAProxy Installation & Configuration
+
+### Commands
+
+```bash
+systemctl status haproxy
+haproxy -c -f /etc/haproxy/haproxy.cfg
+```
+
+📷 **Screenshot Placeholder**
+
+`images/05-haproxy-installation.png`
+
+---
+
+## Step 5 — Create Installation Assets
+
+### Commands
+
+```bash
+openshift-install create manifests
+openshift-install create ignition-configs
+```
+
+📷 **Screenshot Placeholder**
+
+`images/06-install-assets.png`
+
+---
+
+## Step 6 — Deploy RHCOS Virtual Machines
+
+📷 **Screenshot Placeholder**
+
+`images/07-rhcos-template.png`
+
+---
+
+## Step 7 — Inject Ignition Configuration
+
+📷 **Screenshot Placeholder**
+
+`images/08-ignition-configuration.png`
+
+---
+
+## Step 8 — Bootstrap Node Initialization
+
+### Commands
+
+```bash
+journalctl -b -f
+```
+
+📷 **Screenshot Placeholder**
+
+`images/09-bootstrap.png`
+
+---
+
+## Step 9 — Bootstrap Complete
+
+### Commands
+
+```bash
+openshift-install wait-for bootstrap-complete
+```
+
+📷 **Screenshot Placeholder**
+
+`images/10-bootstrap-complete.png`
+
+---
+
+## Step 10 — Power On Worker Nodes
+
+📷 **Screenshot Placeholder**
+
+`images/11-worker-startup.png`
+
+---
+
+## Step 11 — CSR Approval
+
+### Commands
+
+```bash
+oc get csr
+oc adm certificate approve <csr-name>
+```
+
+📷 **Screenshot Placeholder**
+
+`images/12-csr-approval.png`
+
+---
+
+## Step 12 — Verify Cluster Nodes
+
+### Commands
 
 ```bash
 oc get nodes
 ```
 
----
+📷 **Screenshot Placeholder**
 
-## Expected Result
-
-- Cluster Installation Successful
-- All Masters Ready
-- All Workers Ready
-- All Operators Available
-- Cluster Version Healthy
+`images/13-cluster-nodes.png`
 
 ---
 
-# Screenshots
+## Step 13 — Verify Cluster Operators
 
-## 1. VMware Infrastructure
-
-OpenShift virtual machines running on VMware ESXi.
-
-![VMware Infrastructure](images/vmware-esxi-vms.png)
-
----
-
-## 2. Cluster Nodes
-
-All control plane and worker nodes are in Ready state.
-
-```bash
-oc get nodes
-```
-
-![Cluster Nodes](images/oc-get-nodes.png)
-
----
-
-## 3. Cluster Operators
-
-All cluster operators are healthy.
+### Commands
 
 ```bash
 oc get co
 ```
 
-![Cluster Operators](images/oc-get-co.png)
+📷 **Screenshot Placeholder**
+
+`images/14-cluster-operators.png`
 
 ---
 
-## 4. Cluster Version
+## Step 14 — Verify Cluster Version
 
-Cluster successfully upgraded and available.
+### Commands
 
 ```bash
 oc get clusterversion
 ```
 
-![Cluster Version](images/oc-get-clusterversion.png)
+📷 **Screenshot Placeholder**
+
+`images/15-cluster-version.png`
 
 ---
 
-## 5. OpenShift Web Console
+## Step 15 — Access OpenShift Console
 
-Cluster overview from the OpenShift Web Console.
+### Commands
 
-![OpenShift Web Console](images/web-console-home.png)
+```bash
+oc whoami --show-console
+```
 
----
+📷 **Screenshot Placeholder**
 
-# Outcome
-
-Successfully deployed a production-grade Red Hat OpenShift 4.21 cluster on VMware ESXi using the UPI installation method with:
-
-- 3 Control Plane Nodes
-- 6 Worker Nodes
-- Bastion Host
-- Windows DNS
-- Healthy Cluster Operators
-- Production-ready Kubernetes Platform
+`images/16-web-console.png`
 
 ---
 
-# Technologies Used
+# ✅ Final Validation
 
-- Red Hat OpenShift
-- Kubernetes
-- VMware ESXi
-- RHEL 9
-- CRI-O
-- CoreOS
-- Ignition
-- Bash
-- SSH
+```bash
+oc get nodes
+oc get co
+oc get clusterversion
+oc whoami
+```
+
+📷 **Screenshot Placeholder**
+
+`images/17-final-validation.png`
 
 ---
 
-# Next Lab
+# 📚 Lessons Learned
 
-➡️ **02-worker-node**
+- Successfully deployed a production-style OpenShift UPI cluster on VMware vSphere.
+- Configured external HAProxy and Windows AD DNS.
+- Generated and applied Ignition configurations.
+- Validated bootstrap, control plane, and worker node deployment.
+- Verified cluster health and readiness for enterprise workloads.
 
-Adding a new worker node to the production OpenShift cluster.
+---
+
+# 📖 References
+
+- Red Hat OpenShift Documentation
+- VMware vSphere Documentation
+- Kubernetes Documentation
