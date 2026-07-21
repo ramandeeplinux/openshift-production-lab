@@ -249,7 +249,9 @@ sudo chmod +x \
 
 📷 **Screenshot**
 
-`images/05-install-binaries.png`
+![Install OpenShift Binaries](images/05-install-openshift-binaries.png)
+
+> **Figure 5.** Installing the OpenShift Client, `kubectl`, and OpenShift Installer into `/usr/local/bin`.
 
 ---
 
