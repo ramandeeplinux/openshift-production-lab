@@ -21,7 +21,7 @@ The deployment was performed on VMware vSphere ESXi with external HAProxy, Windo
 - [Lab Environment](#-lab-environment)
 - [Deployment Workflow](#-deployment-workflow)
 - [Installation Steps](#-installation-steps)
-  - [Step 1 - Environment Preparation](#step-1--environment-preparation)
+  - [Step 1 - Bastion Host Preparation](#step-1--Bastion Host Preparation)
   - [Step 2 - DNS Configuration](#step-2--dns-configuration)
   - [Step 3 - Configure API & Apps VIP](#step-3--configure-api--apps-vip)
   - [Step 4 - HAProxy Installation](#step-4--haproxy-installation--configuration)
