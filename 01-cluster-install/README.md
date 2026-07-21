@@ -10,35 +10,7 @@ This document provides a complete walkthrough for deploying a highly available R
 
 The deployment was performed on VMware vSphere ESXi with external HAProxy, Windows Active Directory DNS, static IP addressing, and manually injected Ignition configurations. Every stage of the deployment was validated to ensure the cluster was ready for enterprise workloads.
 
-
 ---
-## 📑 Table of Contents
-
-- [Overview](#-overview)
-- [Objectives](#-objectives)
-- [Lab Architecture](#-lab-architecture)
-- [Lab Environment](#-lab-environment)
-- [Deployment Workflow](#-deployment-workflow)
-- [Installation Steps](#-installation-steps)
-  - [Step 1 - Bastion Host Preparation](#step-1--bastion-host-preparation)
-  - [Step 2 - DNS Configuration](#step-2--dns-configuration)
-  - [Step 3 - Configure API & Apps VIP](#step-3--configure-api--apps-vip)
-  - [Step 4 - HAProxy Installation & Configuration](#step-4--haproxy-installation--configuration)
-  - [Step 5 - Create OpenShift Installation Assets](#step-5--create-openshift-installation-assets)
-  - [Step 6 - Deploy RHCOS Virtual Machines](#step-6--deploy-rhcos-virtual-machines)
-  - [Step 7 - Inject Ignition Configuration](#step-7--inject-ignition-configuration)
-  - [Step 8 - Bootstrap Node Initialization](#step-8--bootstrap-node-initialization)
-  - [Step 9 - Bootstrap Completion](#step-9--bootstrap-completion)
-  - [Step 10 - Deploy Control Plane Nodes](#step-10--deploy-control-plane-nodes)
-  - [Step 11 - Deploy Worker Nodes](#step-11--deploy-worker-nodes)
-  - [Step 12 - Certificate Signing Request (CSR) Approval](#step-12--certificate-signing-request-csr-approval)
-  - [Step 13 - Verify Cluster Nodes](#step-13--verify-cluster-nodes)
-  - [Step 14 - Verify Cluster Operators](#step-14--verify-cluster-operators)
-  - [Step 15 - Verify Cluster Version](#step-15--verify-cluster-version)
-  - [Step 16 - Access OpenShift Web Console](#step-16--access-openshift-web-console)
-- [Final Validation](#-final-validation)
-- [Lessons Learned](#-lessons-learned)
-- [References](#-references)
 
 # 🎯 Objectives
 
@@ -93,7 +65,7 @@ The deployment was performed on VMware vSphere ESXi with external HAProxy, Windo
 # 📋 Deployment Workflow
 
 ```text
-Environment Preparation
+Bastion Host Preparation
         │
         ▼
 DNS Configuration
@@ -130,7 +102,7 @@ OpenShift Console Ready
 
 # 🚀 Installation Steps
 
-## Step 1 — Environment Preparation
+## Step 1 — Bastion Host Preparation
 
 ### Description
 
