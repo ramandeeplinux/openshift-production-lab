@@ -150,107 +150,119 @@ Access OpenShift Web Console
 
 ### Objective
 
-The bastion host serves as the administration node for the entire OpenShift installation. It is responsible for generating installation assets, managing the deployment process, interacting with the OpenShift cluster using the `oc` CLI, and hosting supporting services during installation.
-
-Before starting the deployment, the bastion host must be properly configured with the required operating system packages, OpenShift installation binaries, network connectivity, and administrative privileges.
+Prepare the bastion host by installing the required packages, enabling time synchronization, and installing the OpenShift CLI (`oc`) and installer (`openshift-install`).
 
 ---
 
-### Tasks Performed
+### Install Required Packages
 
-- Installed Red Hat Enterprise Linux 9.
-- Configured hostname and static IP address.
-- Updated all operating system packages.
-- Installed required utilities.
-- Downloaded the OpenShift Installer.
-- Downloaded the OpenShift CLI (`oc`).
-- Configured SSH access.
-- Verified internet connectivity.
-- Prepared the working directory for cluster installation.
+```bash
+sudo dnf update -y
+
+sudo dnf install -y \
+wget \
+curl \
+tar \
+git \
+jq \
+haproxy \
+bind-utils \
+chrony \
+python3
+```
+
+### Enable Time Synchronization
+
+```bash
+sudo systemctl enable --now chronyd
+
+chronyc sources -v
+
+timedatectl
+```
+
+📷 **Screenshot**
+
+`images/02-bastion-packages.png`
 
 ---
 
-### Commands
+### Download OpenShift Client & Installer
 
-#### Verify Hostname
+> **Note:** Download the OpenShift Client and Installer versions that match your target OpenShift cluster version.
 
 ```bash
-hostnamectl
+cd /tmp
+
+wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/4.21.2/openshift-client-linux.tar.gz
+
+wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/4.21.2/openshift-install-linux.tar.gz
 ```
 
-#### Verify Network Configuration
+📷 **Screenshot**
+
+`images/03-download-openshift-binaries.png`
+
+---
+
+### Extract the Archives
 
 ```bash
-ip addr
+tar -xvf openshift-client-linux.tar.gz
+
+tar -xvf openshift-install-linux.tar.gz
 ```
 
-#### Verify DNS Resolution
+📷 **Screenshot**
+
+`images/04-extract-binaries.png`
+
+---
+
+### Install the Binaries
 
 ```bash
-ping console.redhat.com
+sudo mv oc kubectl openshift-install /usr/local/bin/
+
+sudo chmod +x \
+/usr/local/bin/oc \
+/usr/local/bin/kubectl \
+/usr/local/bin/openshift-install
 ```
 
-#### Verify OpenShift Client
+📷 **Screenshot**
+
+`images/05-install-binaries.png`
+
+---
+
+### Verify Installation
 
 ```bash
-oc version
-```
+oc version --client
 
-#### Verify OpenShift Installer
-
-```bash
 openshift-install version
 ```
 
----
+Expected Output
 
-### Expected Output
+- OpenShift Client Version: **4.21.2**
+- OpenShift Installer Version: **4.21.2**
 
-The following conditions should be verified before proceeding.
+📷 **Screenshot**
 
-| Validation | Status |
-|------------|--------|
-| Hostname configured | ✅ |
-| Static IP configured | ✅ |
-| Internet connectivity | ✅ |
-| DNS resolution working | ✅ |
-| OpenShift CLI installed | ✅ |
-| OpenShift Installer installed | ✅ |
+`images/06-verify-openshift-version.png`
 
 ---
 
-### Screenshot
+### Verification Checklist
 
-> 📷 `images/02-bastion-host-preparation.png`
-
----
-
-### Validation
-
-The bastion host is considered ready when:
-
-- The operating system is fully updated.
-- Network connectivity is available.
-- DNS resolution is functioning correctly.
-- The OpenShift CLI is accessible.
-- The OpenShift Installer version matches the target OpenShift release.
-- The user can successfully execute administrative commands without errors.
-
----
-
-### Production Notes
-
-- Keep the OpenShift Installer (`openshift-install`) and OpenShift Client (`oc`) at the same version.
-- Use a dedicated bastion host instead of performing the installation from a workstation.
-- Synchronize the system time using NTP before starting the installation.
-- Ensure passwordless SSH connectivity to all cluster nodes.
-- Maintain a dedicated working directory to store installation assets and Ignition files.
-
----
-
-### Lessons Learned
-
-A properly prepared bastion host minimizes deployment issues and provides a consistent environment for cluster installation. Verifying all prerequisites before generating installation assets helps avoid installation failures later in the deployment process.
+- ✅ Required packages installed
+- ✅ Chrony service enabled
+- ✅ Time synchronized
+- ✅ OpenShift Client installed
+- ✅ OpenShift Installer installed
+- ✅ Correct OpenShift version verified
 
 
 ### Step 02: DNS Configuration
