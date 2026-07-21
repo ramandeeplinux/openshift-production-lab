@@ -182,10 +182,11 @@ chronyc sources -v
 timedatectl
 ```
 
-📷 **Screenshot**
+### 📷 Screenshot
 
-`images/02-bastion-packages.png`
+![Bastion Host Preparation - Required Packages](images/02-bastion-packages.png)
 
+> **Figure 2.** Required packages successfully installed on the bastion host.
 ---
 
 ### Download OpenShift Client & Installer
