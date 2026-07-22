@@ -571,7 +571,7 @@ openshift-install create manifests
 
 ### Output
 
-![Generate Manifests](images/15-create-manifests.png)
+![Generate Manifests](images/15-create-manifests.PNG)
 
 > **Figure 15.** Successfully generated the OpenShift installation manifests.
 
