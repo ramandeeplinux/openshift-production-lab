@@ -623,7 +623,7 @@ Create the required virtual machines on the VMware vSphere ESXi host with the ap
 
 ### Output
 
-![RHCOS Virtual Machines](images/17-rhcos-virtual-machines.png)
+![RHCOS Virtual Machines](images/17-rhcos-virtual-machines.PNG)
 
 > **Figure 17.** Red Hat Enterprise Linux CoreOS virtual machines created on VMware vSphere ESXi.
 
