@@ -366,10 +366,54 @@ The successful `nslookup` results confirm that all required DNS records are corr
 
 ---
 
-### Step 03: Configure API & Apps VIP
+### Step 03: Configure API & Applications Virtual IP (VIP)
 
-> `images/04-vip-configuration.png`
+Configure the **API Virtual IP (API VIP)** and **Applications Virtual IP (Apps VIP)** that will be used by the OpenShift cluster. The API VIP provides access to the OpenShift API server, while the Apps VIP is used to expose application routes.
 
+### Virtual IP Configuration
+
+| Virtual IP | Purpose |
+|------------|---------|
+| API VIP | OpenShift API Endpoint |
+| Apps VIP | OpenShift Application Routes |
+
+> **Example**
+>
+> API VIP : `192.168.0.82`  
+> Apps VIP : `192.168.0.83`
+
+---
+
+### Verify Virtual IP Configuration
+
+Verify that both Virtual IP addresses are correctly configured and reachable.
+
+### Commands
+
+```bash
+ip addr
+
+ping -c 4 192.168.0.82
+
+ping -c 4 192.168.0.83
+```
+
+> **Note:** Replace the example IP addresses with the actual API VIP and Apps VIP configured in your environment.
+
+### Output
+
+![API and Applications Virtual IP Configuration](images/09-api-apps-vip.png)
+
+> **Figure 9.** Verification of the configured API VIP and Applications VIP.
+
+The successful verification confirms that both Virtual IP addresses are correctly configured and reachable before proceeding with the HAProxy configuration.
+
+### Notes
+
+- Configure the API VIP and Apps VIP before starting the cluster installation.
+- Ensure both VIPs belong to the same network as the OpenShift nodes.
+- Verify that no other device is using these IP addresses.
+- Use dedicated Virtual IPs for production deployments.
 ---
 
 ### Step 04: HAProxy Installation & Configuration
