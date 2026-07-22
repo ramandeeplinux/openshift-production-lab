@@ -444,7 +444,7 @@ sudo vi /etc/haproxy/haproxy.cfg
 
 ### Output
 
-![HAProxy Configuration](images/10-haproxy-configuration.png)
+![HAProxy Configuration](images/10-haproxy-configuration.PNG)
 
 > **Figure 10.** HAProxy configuration for the OpenShift API, Machine Config Server, and Ingress Router.
 
@@ -462,7 +462,7 @@ sudo haproxy -c -f /etc/haproxy/haproxy.cfg
 
 ### Output
 
-![HAProxy Configuration Validation](images/11-haproxy-validation.png)
+![HAProxy Configuration Validation](images/11-haproxy-validation.PNG)
 
 > **Figure 11.** Successful validation of the HAProxy configuration.
 
@@ -482,7 +482,7 @@ sudo systemctl status haproxy
 
 ### Output
 
-![HAProxy Service Status](images/12-haproxy-service-status.png)
+![HAProxy Service Status](images/12-haproxy-service-status.PNG)
 
 > **Figure 12.** HAProxy service running successfully on the bastion host.
 
