@@ -499,7 +499,108 @@ The successful validation and running service status confirm that HAProxy is rea
 
 ### Step 05: Create OpenShift Installation Assets
 
-> `images/06-installation-assets.png`
+Create the OpenShift installation directory and generate the installation assets required to deploy the cluster.
+
+### Create Installation Directory
+
+Create a working directory for the OpenShift installation.
+
+### Commands
+
+```bash
+mkdir ~/ocp-install
+
+cd ~/ocp-install
+```
+
+---
+
+### Create the Installation Configuration
+
+Generate the `install-config.yaml` file using the OpenShift Installer.
+
+### Commands
+
+```bash
+openshift-install create install-config
+```
+
+Complete the interactive prompts by providing:
+
+- Cluster Name
+- Base Domain
+- Platform (None / UPI)
+- Pull Secret
+- SSH Public Key
+
+### Output
+
+![Create Install Config](images/13-create-install-config.png)
+
+> **Figure 13.** Generating the `install-config.yaml` file using the OpenShift Installer.
+
+---
+
+### Review the Installation Configuration
+
+Verify the generated installation configuration.
+
+### Commands
+
+```bash
+cat install-config.yaml
+```
+
+### Output
+
+![Install Config YAML](images/14-install-config-yaml.png)
+
+> **Figure 14.** Generated `install-config.yaml` containing the cluster configuration.
+
+---
+
+### Generate Installation Manifests
+
+Generate the Kubernetes manifests required for the installation.
+
+### Commands
+
+```bash
+openshift-install create manifests
+```
+
+### Output
+
+![Generate Manifests](images/15-create-manifests.png)
+
+> **Figure 15.** Successfully generated the OpenShift installation manifests.
+
+---
+
+### Generate Ignition Configuration Files
+
+Generate the Ignition configuration files for the bootstrap, control plane, and worker nodes.
+
+### Commands
+
+```bash
+openshift-install create ignition-configs
+```
+
+### Output
+
+![Generate Ignition Files](images/16-create-ignition-configs.png)
+
+> **Figure 16.** Successfully generated the Ignition configuration files.
+
+The generated installation assets include the `install-config.yaml`, Kubernetes manifests, and Ignition configuration files required for deploying the OpenShift cluster.
+
+### Notes
+
+- Keep the `install-config.yaml` file secure, as it contains sensitive information.
+- Back up the generated Ignition files before deployment.
+- Do not modify the generated Ignition files unless required.
+- Verify all generated files before booting the cluster nodes.
 
 ---
 
