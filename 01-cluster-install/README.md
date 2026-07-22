@@ -589,7 +589,7 @@ openshift-install create ignition-configs
 
 ### Output
 
-![Generate Ignition Files](images/16-create-ignition-configs.png)
+![Generate Ignition Files](images/16-create-ignition-configs.PNG)
 
 > **Figure 16.** Successfully generated the Ignition configuration files.
 
