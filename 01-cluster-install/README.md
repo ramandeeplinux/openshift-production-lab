@@ -644,7 +644,7 @@ Configure each virtual machine with its corresponding Ignition configuration.
 
 ### Output
 
-![Ignition Configuration](images/18-ignition-configuration.png)
+![Ignition Configuration](images/18-ignition-configuration.PNG)
 
 > **Figure 18.** Ignition configuration attached to each virtual machine.
 
