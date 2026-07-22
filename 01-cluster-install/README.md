@@ -535,7 +535,7 @@ Complete the interactive prompts by providing:
 
 ### Output
 
-![Create Install Config](images/13-create-install-config.png)
+![Create Install Config](images/13-create-install-config.PNG)
 
 > **Figure 13.** Generating the `install-config.yaml` file using the OpenShift Installer.
 
