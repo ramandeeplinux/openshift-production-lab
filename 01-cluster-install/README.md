@@ -604,7 +604,7 @@ The generated installation assets include the `install-config.yaml`, Kubernetes 
 
 ---
 
-### Step 06: Deploy Red Hat Enterprise Linux CoreOS (RHCOS) Virtual Machines
+### Step 06: Deploy RHCOS Virtual Machines
 
 Deploy the bootstrap, control plane, and worker virtual machines using the generated Red Hat Enterprise Linux CoreOS (RHCOS) Ignition configuration files. These virtual machines form the foundation of the OpenShift cluster.
 
