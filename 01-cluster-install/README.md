@@ -418,7 +418,82 @@ The successful verification confirms that both Virtual IP addresses are correctl
 
 ### Step 04: HAProxy Installation & Configuration
 
-> `images/05-haproxy-installation.png`
+HAProxy is used as the external load balancer for the OpenShift cluster. It distributes incoming traffic to the API server, Machine Config Server (MCS), and Ingress Router, ensuring high availability and reliable access to the cluster.
+
+### Install HAProxy
+
+Install the HAProxy package on the bastion host.
+
+### Commands
+
+```bash
+sudo dnf install -y haproxy
+```
+
+---
+
+### Configure HAProxy
+
+Update the HAProxy configuration file with the required frontend and backend definitions for the OpenShift API, Machine Config Server, and Ingress Router.
+
+### Commands
+
+```bash
+sudo vi /etc/haproxy/haproxy.cfg
+```
+
+### Output
+
+![HAProxy Configuration](images/10-haproxy-configuration.png)
+
+> **Figure 10.** HAProxy configuration for the OpenShift API, Machine Config Server, and Ingress Router.
+
+---
+
+### Validate HAProxy Configuration
+
+Verify the configuration syntax before starting the HAProxy service.
+
+### Commands
+
+```bash
+sudo haproxy -c -f /etc/haproxy/haproxy.cfg
+```
+
+### Output
+
+![HAProxy Configuration Validation](images/11-haproxy-validation.png)
+
+> **Figure 11.** Successful validation of the HAProxy configuration.
+
+---
+
+### Enable and Start HAProxy
+
+Enable the HAProxy service to start automatically during system boot and start the service.
+
+### Commands
+
+```bash
+sudo systemctl enable --now haproxy
+
+sudo systemctl status haproxy
+```
+
+### Output
+
+![HAProxy Service Status](images/12-haproxy-service-status.png)
+
+> **Figure 12.** HAProxy service running successfully on the bastion host.
+
+The successful validation and running service status confirm that HAProxy is ready to provide load balancing for the OpenShift cluster installation.
+
+### Notes
+
+- Always validate the configuration before restarting HAProxy.
+- Ensure the API VIP and Apps VIP are configured correctly.
+- Confirm that backend server IP addresses match the bootstrap, control plane, and worker nodes.
+- Allow the required ports through the firewall if it is enabled.
 
 ---
 
