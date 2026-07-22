@@ -402,7 +402,7 @@ ping -c 4 192.168.0.83
 
 ### Output
 
-![API and Applications Virtual IP Configuration](images/09-api-apps-vip.png)
+![API and Applications Virtual IP Configuration](images/09-api-apps-vip.PNG)
 
 > **Figure 9.** Verification of the configured API VIP and Applications VIP.
 
