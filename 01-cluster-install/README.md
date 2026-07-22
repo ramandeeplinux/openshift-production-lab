@@ -604,9 +604,77 @@ The generated installation assets include the `install-config.yaml`, Kubernetes 
 
 ---
 
-### Step 06: Deploy RHCOS Virtual Machines
+### Step 06: Deploy Red Hat Enterprise Linux CoreOS (RHCOS) Virtual Machines
 
-> `images/07-rhcos-deployment.png`
+Deploy the bootstrap, control plane, and worker virtual machines using the generated Red Hat Enterprise Linux CoreOS (RHCOS) Ignition configuration files. These virtual machines form the foundation of the OpenShift cluster.
+
+### Create Virtual Machines
+
+Create the required virtual machines on the VMware vSphere ESXi host with the appropriate CPU, memory, disk, and network configuration.
+
+| Virtual Machine | Role |
+|-----------------|------|
+| bootstrap | Bootstrap Node |
+| master-0 | Control Plane Node |
+| master-1 | Control Plane Node |
+| master-2 | Control Plane Node |
+| worker-0 | Worker Node |
+| worker-1 | Worker Node |
+
+### Output
+
+![RHCOS Virtual Machines](images/17-rhcos-virtual-machines.png)
+
+> **Figure 17.** Red Hat Enterprise Linux CoreOS virtual machines created on VMware vSphere ESXi.
+
+---
+
+### Attach Ignition Configuration
+
+Configure each virtual machine with its corresponding Ignition configuration.
+
+| Virtual Machine | Ignition File |
+|-----------------|---------------|
+| bootstrap | bootstrap.ign |
+| master-0 | master.ign |
+| master-1 | master.ign |
+| master-2 | master.ign |
+| worker-0 | worker.ign |
+| worker-1 | worker.ign |
+
+### Output
+
+![Ignition Configuration](images/18-ignition-configuration.png)
+
+> **Figure 18.** Ignition configuration attached to each virtual machine.
+
+---
+
+### Power On the Virtual Machines
+
+Start the virtual machines in the following order:
+
+1. Bootstrap
+2. Master-0
+3. Master-1
+4. Master-2
+5. Worker-0
+6. Worker-1
+
+### Output
+
+![Virtual Machines Running](images/19-rhcos-vms-running.png)
+
+> **Figure 19.** All Red Hat Enterprise Linux CoreOS virtual machines powered on successfully.
+
+The successful deployment of the bootstrap, control plane, and worker nodes completes the infrastructure required for the OpenShift installation.
+
+### Notes
+
+- Verify that every virtual machine is connected to the correct network.
+- Ensure the appropriate Ignition file is assigned to each virtual machine.
+- Confirm that all virtual machines boot successfully before continuing.
+- Verify network connectivity between all cluster nodes.
 
 ---
 
