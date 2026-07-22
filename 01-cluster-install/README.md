@@ -553,7 +553,7 @@ cat install-config.yaml
 
 ### Output
 
-![Install Config YAML](images/14-install-config-yaml.png)
+![Install Config YAML](images/14-install-config-yaml.PNG)
 
 > **Figure 14.** Generated `install-config.yaml` containing the cluster configuration.
 
