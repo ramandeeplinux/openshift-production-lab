@@ -663,7 +663,7 @@ Start the virtual machines in the following order:
 
 ### Output
 
-![Virtual Machines Running](images/19-rhcos-vms-running.png)
+![Virtual Machines Running](images/19-rhcos-vms-running.PNG)
 
 > **Figure 19.** All Red Hat Enterprise Linux CoreOS virtual machines powered on successfully.
 
