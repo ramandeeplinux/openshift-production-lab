@@ -331,7 +331,7 @@ python3
 
 ### Output
 
-![Bastion Required Packages](images/02-bastion-packages.PNG)
+![Bastion Required Packages](images/02-bastion-packages.png)
 
 > **Figure 2.** Required packages installed successfully on the SNO bastion host.
 
