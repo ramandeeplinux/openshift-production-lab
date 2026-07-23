@@ -1070,7 +1070,95 @@ Successful CSR approval allows the kubelet on each node to establish trusted com
 
 ### Step 13: Verify Cluster Nodes
 
-> `images/14-cluster-nodes.png`
+After approving the required Certificate Signing Requests (CSRs), verify that all control plane and worker nodes have successfully joined the OpenShift cluster and reached the `Ready` state.
+
+### Verify Node Status
+
+Run the following command from the bastion host.
+
+### Commands
+
+```bash
+export KUBECONFIG=~/ocp-install/auth/kubeconfig
+
+oc get nodes
+```
+
+All expected control plane and worker nodes should appear in the cluster.
+
+### Output
+
+![OpenShift Cluster Nodes](images/16-cluster-nodes.PNG)
+
+> **Figure 25.** OpenShift control plane and worker nodes successfully registered with the cluster and reporting a `Ready` status.
+
+---
+
+### Verify Detailed Node Information
+
+Display additional information including internal IP addresses, node roles, operating system, and Kubernetes version.
+
+### Commands
+
+```bash
+oc get nodes -o wide
+```
+
+### Output
+
+![OpenShift Cluster Nodes Wide Output](images/17-cluster-nodes-wide.PNG)
+
+> **Figure 26.** Detailed validation of OpenShift cluster nodes including node roles, internal IP addresses, operating system, container runtime, and Kubernetes version.
+
+### Expected Result
+
+The cluster should contain the expected control plane and worker nodes with a `Ready` status.
+
+```text
+NAME       STATUS   ROLES                  AGE   VERSION
+master-0   Ready    control-plane,master   ...   ...
+master-1   Ready    control-plane,master   ...   ...
+master-2   Ready    control-plane,master   ...   ...
+worker-0   Ready    worker                 ...   ...
+worker-1   Ready    worker                 ...   ...
+worker-2   Ready    worker                 ...   ...
+worker-3   Ready    worker                 ...   ...
+worker-4   Ready    worker                 ...   ...
+worker-5   Ready    worker                 ...   ...
+```
+
+> **Note:** The number of worker nodes, Kubernetes version, node age, and IP addresses will depend on the deployed environment.
+
+---
+
+### Verify Node Roles
+
+Confirm that the appropriate roles are assigned to the control plane and worker nodes.
+
+### Commands
+
+```bash
+oc get nodes \
+    -L node-role.kubernetes.io/master,node-role.kubernetes.io/worker
+```
+
+The control plane nodes should have the `master` / `control-plane` role and compute nodes should have the `worker` role.
+
+### Validation
+
+- All control plane nodes are present.
+- All expected worker nodes are present.
+- Every node reports `Ready`.
+- Node roles are assigned correctly.
+- Internal IP addresses match the planned network configuration.
+- Kubernetes versions are consistent across the cluster.
+
+### Notes
+
+- A node reporting `NotReady` should be investigated before proceeding.
+- Check pending CSRs with `oc get csr` if a newly deployed node does not become `Ready`.
+- Verify DNS, network connectivity, kubelet, and MachineConfig status when troubleshooting node registration issues.
+- All expected nodes should reach a stable `Ready` state before the cluster is considered healthy.
 
 ---
 
