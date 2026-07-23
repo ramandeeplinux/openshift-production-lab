@@ -974,7 +974,97 @@ The pending CSRs must be reviewed and approved before the worker nodes can fully
 
 ### Step 12: Certificate Signing Request (CSR) Approval
 
-> `images/13-csr-approval.png`
+During the initial registration of new worker nodes, OpenShift generates Certificate Signing Requests (CSRs) for secure communication between the kubelet and the Kubernetes API server.
+
+In a User-Provisioned Infrastructure (UPI) deployment, these CSRs must be reviewed and approved so that the worker nodes can successfully join the cluster.
+
+### Check Pending CSRs
+
+From the bastion host, verify the pending Certificate Signing Requests.
+
+### Commands
+
+```bash
+export KUBECONFIG=~/ocp-install/auth/kubeconfig
+
+oc get csr
+```
+
+Review the output and identify the CSRs with the `Pending` status.
+
+### Output
+
+![Pending Certificate Signing Requests](images/13-pending-csr.PNG)
+
+> **Figure 22.** Pending Certificate Signing Requests generated during worker node registration.
+
+---
+
+### Approve Pending CSRs
+
+After verifying that the requests belong to the expected OpenShift nodes, approve the pending CSRs.
+
+### Commands
+
+```bash
+oc get csr
+```
+
+Approve an individual CSR:
+
+```bash
+oc adm certificate approve <csr-name>
+```
+
+For multiple verified pending CSRs, approve them as required.
+
+```bash
+oc get csr --no-headers | awk '$5=="Pending" {print $1}' | \
+xargs -r oc adm certificate approve
+```
+
+> **Important:** Review the CSR requestors before bulk approval and confirm that the requests originate from expected cluster nodes.
+
+### Output
+
+![CSR Approval](images/14-csr-approval.PNG)
+
+> **Figure 23.** Approval of verified Certificate Signing Requests for OpenShift nodes.
+
+---
+
+### Verify CSR Status
+
+After approval, verify that the Certificate Signing Requests have transitioned from `Pending` to `Approved,Issued`.
+
+### Commands
+
+```bash
+oc get csr
+```
+
+### Expected Result
+
+```text
+NAME        AGE   SIGNERNAME                                    REQUESTOR     CONDITION
+csr-xxxxx   ...   kubernetes.io/kube-apiserver-client-kubelet   ...           Approved,Issued
+```
+
+### Output
+
+![Approved Certificate Signing Requests](images/15-approved-csr.PNG)
+
+> **Figure 24.** Certificate Signing Requests successfully approved and certificates issued to the OpenShift nodes.
+
+Successful CSR approval allows the kubelet on each node to establish trusted communication with the OpenShift control plane and continue the node registration process.
+
+### Notes
+
+- Always inspect pending CSRs before approving them.
+- Verify that CSR requestors correspond to expected OpenShift nodes or bootstrap identities.
+- New nodes can generate more than one CSR during the registration process.
+- Re-run `oc get csr` after a short interval to check whether additional CSRs require approval.
+- If a node remains `NotReady` after CSR approval, verify its networking, DNS, Ignition, kubelet, and MachineConfig status.
 
 ---
 
