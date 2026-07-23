@@ -819,7 +819,88 @@ sudo systemctl status haproxy
 
 ### Step 10: Deploy Control Plane Nodes
 
-> `images/11-control-plane-nodes.png`
+Deploy the three OpenShift control plane nodes that provide the Kubernetes API, etcd, scheduler, controller manager, and other critical control plane services.
+
+The control plane nodes use the generated `master.ign` Ignition configuration during their initial boot.
+
+### Control Plane Nodes
+
+| Node | Role | Ignition Configuration |
+|------|------|------------------------|
+| master-0 | Control Plane | `master.ign` |
+| master-1 | Control Plane | `master.ign` |
+| master-2 | Control Plane | `master.ign` |
+
+---
+
+### Power On Control Plane Nodes
+
+Power on all three control plane virtual machines from VMware vSphere ESXi.
+
+The nodes will boot using RHCOS and automatically apply the previously injected `master.ign` configuration.
+
+### Output
+
+![Control Plane Nodes](images/11-control-plane-nodes.PNG)
+
+> **Figure 20.** Three OpenShift control plane virtual machines deployed and powered on in the VMware vSphere environment.
+
+---
+
+### Monitor Control Plane Nodes
+
+From the bastion host, verify that the control plane nodes are joining the cluster.
+
+### Commands
+
+```bash
+export KUBECONFIG=~/ocp-install/auth/kubeconfig
+
+oc get nodes
+```
+
+During initialization, the control plane nodes may initially appear as `NotReady`.
+
+```bash
+oc get nodes -o wide
+```
+
+Continue monitoring until all control plane nodes become available.
+
+### Expected Result
+
+```text
+NAME       STATUS   ROLES                  AGE   VERSION
+master-0   Ready    control-plane,master   ...   ...
+master-1   Ready    control-plane,master   ...   ...
+master-2   Ready    control-plane,master   ...   ...
+```
+
+> **Note:** The exact Kubernetes version, IP addresses, and node age will depend on the deployed environment.
+
+---
+
+### Verify Control Plane Health
+
+Verify the status of the control plane nodes.
+
+### Commands
+
+```bash
+oc get nodes -l node-role.kubernetes.io/master
+
+oc get nodes -o wide
+```
+
+The three control plane nodes should eventually report a `Ready` status after the required cluster services and MachineConfig have been applied.
+
+### Notes
+
+- All three control plane nodes use the same generated `master.ign` configuration.
+- Ensure the control plane nodes can communicate with the API VIP and each other.
+- Do not proceed with cluster validation until the control plane nodes have successfully joined the cluster.
+- Nodes can temporarily report `NotReady` during initial configuration.
+- Verify DNS, HAProxy, networking, and Ignition configuration if a control plane node fails to join.
 
 ---
 
