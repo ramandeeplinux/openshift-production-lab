@@ -756,8 +756,65 @@ The bootstrap node initializes the Kubernetes control plane, Machine Config Oper
 
 ### Step 09: Bootstrap Completion
 
-> `images/10-bootstrap-completion.png`
+Monitor the OpenShift bootstrap process until the temporary bootstrap control plane completes successfully. Bootstrap completion confirms that the permanent control plane nodes are ready to take over the required cluster services.
 
+### Monitor Bootstrap Completion
+
+Run the OpenShift Installer from the bastion host and wait for the bootstrap process to complete.
+
+### Commands
+
+```bash
+openshift-install wait-for bootstrap-complete \
+    --dir=~/ocp-install \
+    --log-level=info
+```
+
+### Expected Result
+
+After the bootstrap process completes successfully, the installer reports that the bootstrap resources can safely be removed.
+
+```text
+INFO It is now safe to remove the bootstrap resources
+```
+
+### Output
+
+![Bootstrap Completion](images/10-bootstrap-completion.PNG)
+
+> **Figure 19.** Successful completion of the OpenShift bootstrap process, confirming that the bootstrap resources can safely be removed.
+
+The successful bootstrap completion indicates that the permanent control plane has taken over the required cluster services and the temporary bootstrap node is no longer required.
+
+---
+
+### Remove Bootstrap Node from HAProxy
+
+After successful bootstrap completion, remove or disable the bootstrap node entries from the HAProxy backends.
+
+### Commands
+
+```bash
+sudo vi /etc/haproxy/haproxy.cfg
+
+sudo haproxy -c -f /etc/haproxy/haproxy.cfg
+
+sudo systemctl reload haproxy
+```
+
+Verify that the HAProxy configuration is valid and the service remains operational.
+
+```bash
+sudo systemctl status haproxy
+```
+
+### Notes
+
+- Do not remove the bootstrap node before the installer confirms successful bootstrap completion.
+- Save the bootstrap completion output as installation evidence.
+- After successful completion, remove the bootstrap server entries from the HAProxy configuration.
+- Validate the HAProxy configuration before reloading the service.
+- The bootstrap virtual machine can be powered off after successful bootstrap completion.
 ---
 
 ### Step 10: Deploy Control Plane Nodes
