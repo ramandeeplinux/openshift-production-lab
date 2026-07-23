@@ -680,8 +680,43 @@ The successful deployment of the bootstrap, control plane, and worker nodes comp
 
 ### Step 07: Inject Ignition Configuration
 
-> `images/08-ignition-configuration.png`
+Configure each Red Hat Enterprise Linux CoreOS (RHCOS) virtual machine with the appropriate Ignition configuration. During boot, the Ignition file provisions the operating system with the required OpenShift configuration, networking, certificates, and MachineConfig settings.
 
+### Configure Ignition Files
+
+Assign the generated Ignition configuration files to the corresponding virtual machines using the VMware vSphere ESXi **Advanced Configuration Parameters**.
+
+| Virtual Machine | Ignition File |
+|-----------------|---------------|
+| bootstrap | bootstrap.ign |
+| master-0 | master.ign |
+| master-1 | master.ign |
+| master-2 | master.ign |
+| worker-0 | worker.ign |
+| worker-1 | worker.ign |
+
+For each virtual machine, configure the following VMware advanced settings:
+
+| Parameter | Description |
+|-----------|-------------|
+| `guestinfo.ignition.config.data` | Base64-encoded Ignition configuration |
+| `guestinfo.ignition.config.data.encoding` | Set to `base64` |
+
+### Output
+
+![Ignition Configuration](images/08-ignition-configuration.PNG)
+
+> **Figure 17.** VMware ESXi virtual machine configured with the required Ignition parameters.
+
+The Ignition configuration is injected before the first boot of each virtual machine. During startup, RHCOS reads these parameters and automatically configures the operating system as required for the OpenShift installation.
+
+### Notes
+
+- Assign the correct Ignition file to each virtual machine.
+- Verify that `guestinfo.ignition.config.data` contains the correct Base64-encoded content.
+- Set `guestinfo.ignition.config.data.encoding` to `base64`.
+- Apply the configuration before powering on the virtual machines.
+- Incorrect Ignition parameters may prevent the node from joining the OpenShift cluster.
 ---
 
 ### Step 08: Bootstrap Node Initialization
