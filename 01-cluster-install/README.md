@@ -721,7 +721,36 @@ The Ignition configuration is injected before the first boot of each virtual mac
 
 ### Step 08: Bootstrap Node Initialization
 
-> `images/09-bootstrap-node.png`
+Power on the bootstrap virtual machine to begin the OpenShift cluster installation. During this phase, the bootstrap node initializes the temporary control plane services required to deploy the Kubernetes control plane.
+
+### Start the Bootstrap Process
+
+Start the bootstrap virtual machine and monitor the installation progress from the bastion host.
+
+### Commands
+
+```bash
+openshift-install wait-for bootstrap-complete \
+    --dir=~/ocp-install \
+    --log-level=info
+```
+
+The installer continuously monitors the bootstrap process until the temporary control plane is successfully initialized.
+
+### Output
+
+![Bootstrap Node Initialization](images/09-bootstrap-node.PNG)
+
+> **Figure 18.** OpenShift Installer monitoring the bootstrap node initialization process.
+
+The bootstrap node initializes the Kubernetes control plane, Machine Config Operator, and other core cluster services required before the control plane nodes become fully operational.
+
+### Notes
+
+- Ensure the bootstrap virtual machine is powered on before running the installer.
+- Monitor the installation logs for any errors during initialization.
+- Verify that the bootstrap node can communicate with the control plane nodes.
+- Do not power off the bootstrap node until the bootstrap process completes successfully.
 
 ---
 
