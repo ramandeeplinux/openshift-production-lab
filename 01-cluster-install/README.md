@@ -1250,7 +1250,71 @@ oc describe co network
 
 ### Step 15: Verify Cluster Version
 
-> `images/16-cluster-version.png`
+Verify the installed OpenShift Container Platform version and confirm that the cluster is running the expected release.
+
+The Cluster Version Operator (CVO) manages OpenShift cluster version information and coordinates platform updates.
+
+### Verify Cluster Version
+
+Run the following command from the bastion host.
+
+### Commands
+
+```bash
+export KUBECONFIG=~/ocp-install/auth/kubeconfig
+
+oc get clusterversion
+```
+
+### Output
+
+![OpenShift Cluster Version](images/19-cluster-version.PNG)
+
+> **Figure 28.** Verification of the installed OpenShift Container Platform version and ClusterVersion status.
+
+---
+
+### Expected Result
+
+A successfully installed cluster should display the active OpenShift release and indicate that no update is currently progressing.
+
+Example:
+
+```text
+NAME      VERSION    AVAILABLE   PROGRESSING   SINCE   STATUS
+version   4.21.21    True        False         ...     Cluster version is 4.21.21
+```
+
+> **Note:** The exact version and status message depend on the OpenShift release deployed in the environment.
+
+---
+
+### Verify Detailed Cluster Version Information
+
+Display additional ClusterVersion information for further validation.
+
+### Commands
+
+```bash
+oc describe clusterversion version
+```
+
+This provides detailed information about the current release, update history, available updates, and ClusterVersion conditions.
+
+### Validation
+
+- The expected OpenShift version is installed.
+- `AVAILABLE` reports `True`.
+- `PROGRESSING` reports `False` after the cluster has stabilized.
+- No ClusterVersion errors are reported.
+- The installed release matches the intended OpenShift deployment version.
+
+### Notes
+
+- The ClusterVersion Operator manages OpenShift release updates.
+- `Progressing=True` can temporarily appear during installation or an upgrade.
+- Investigate any persistent ClusterVersion error before considering the platform fully healthy.
+- Cluster Operators should also be healthy before performing a future OpenShift upgrade.
 
 ---
 
