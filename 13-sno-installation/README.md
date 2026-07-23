@@ -166,7 +166,9 @@ OpenShift Web Console
 
 ## Step 01: Lab Preparation
 
-Before starting the installation, verify the network plan and infrastructure parameters that will be used throughout the SNO deployment.
+Before starting the Single Node OpenShift installation, verify the bastion host, network configuration, DNS resolver, default gateway, and system time.
+
+This validation ensures that the infrastructure is ready before generating the Agent-Based Installer configuration.
 
 ### Lab Information
 
@@ -174,39 +176,132 @@ Before starting the installation, verify the network plan and infrastructure par
 |------|-------|
 | OpenShift Version | 4.21.x |
 | Installation Type | Agent-Based Installer |
-| Cluster Type | Single Node OpenShift |
+| Cluster Type | Single Node OpenShift (SNO) |
 | Hypervisor | VMware ESXi |
-| Cluster Name | `ocp4` |
 | Base Domain | `linuxteam.com` |
+| Cluster Name | `ocp4` |
 | Bastion Host | `bastion-sno.ocp4.linuxteam.com` |
 | Bastion IP | `172.21.94.33` |
-| SNO Host | `ocp4.linuxteam.com` |
-| SNO IP | `172.21.94.34` |
-| DNS | `172.21.95.149` |
+| OpenShift Node | `ocp4.linuxteam.com` |
+| SNO Node IP | `172.21.94.34` |
+| DNS Server | `172.21.95.149` |
 | Gateway | `172.21.94.1` |
 | Machine Network | `172.21.94.0/23` |
+| Network Configuration | Static IP |
 
-### Verify Bastion Network
+---
+
+### Verify Bastion Hostname
 
 ```bash
 hostnamectl
+```
 
+Confirm that the bastion host is configured with the expected hostname:
+
+```text
+bastion-sno.ocp4.linuxteam.com
+```
+
+---
+
+### Verify Bastion Network Configuration
+
+```bash
 ip -br addr
+```
 
+Confirm that the bastion host has the expected IP address:
+
+```text
+172.21.94.33
+```
+
+---
+
+### Verify Default Gateway
+
+```bash
 ip route
+```
 
+Confirm that the default route points to:
+
+```text
+172.21.94.1
+```
+
+---
+
+### Verify DNS Resolver
+
+```bash
 cat /etc/resolv.conf
+```
 
+Confirm that the configured DNS server is:
+
+```text
+172.21.95.149
+```
+
+---
+
+### Verify Time Synchronization
+
+```bash
 timedatectl
 ```
 
-### Expected Result
+Confirm that system time synchronization is enabled and the system clock is synchronized.
 
-The bastion host should have the planned hostname, IP address, gateway, DNS server, and synchronized system time.
+---
 
-📷 **Screenshot**
+### Combined Pre-flight Validation
 
-> Screenshot will be added after practical validation.
+Run the following commands together to capture the complete bastion host pre-flight validation:
+
+```bash
+echo "===== HOSTNAME ====="
+hostnamectl
+
+echo
+echo "===== NETWORK ====="
+ip -br addr
+
+echo
+echo "===== DEFAULT ROUTE ====="
+ip route
+
+echo
+echo "===== DNS ====="
+cat /etc/resolv.conf
+
+echo
+echo "===== TIME SYNCHRONIZATION ====="
+timedatectl
+```
+
+### Output
+
+![SNO Lab Preparation](images/01-lab-preparation.PNG)
+
+> **Figure 1.** Pre-flight validation of the SNO bastion host showing hostname, network configuration, default gateway, DNS resolver, and system time synchronization.
+
+### Validation
+
+- Bastion hostname is configured correctly.
+- Bastion IP address is `172.21.94.33`.
+- Default gateway is `172.21.94.1`.
+- DNS resolver is `172.21.95.149`.
+- System clock is synchronized.
+- Bastion host has network connectivity required for the OpenShift installation.
+
+### Notes
+
+- Verify all network parameters before generating the Agent-Based Installer configuration.
+- Incorrect DNS, gateway, or network configuration can cause Agent discovery and installation validation failures.
+- Accurate time synchronization is important for certificates and communication between OpenShift components.
 
 ---
 
