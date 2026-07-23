@@ -1402,18 +1402,117 @@ The successful Web Console login confirms that the console route, ingress servic
 
 ## ✅ Final Validation
 
+After completing the OpenShift installation, perform a final validation to confirm that the cluster is fully operational and ready for Day-2 configuration and workloads.
+
+### Verify Cluster Nodes
+
+Confirm that all control plane and worker nodes are in the `Ready` state.
+
 ```bash
 oc get nodes -o wide
+```
+
+### Verify Cluster Operators
+
+Confirm that all Cluster Operators are healthy.
+
+```bash
 oc get co
+```
+
+For a stable cluster, the expected operator status is:
+
+```text
+AVAILABLE   PROGRESSING   DEGRADED
+True        False         False
+```
+
+### Verify OpenShift Cluster Version
+
+```bash
 oc get clusterversion
+```
+
+Confirm that the cluster is running the expected OpenShift release and is not reporting an installation or update failure.
+
+### Verify Pending CSRs
+
+```bash
 oc get csr
+```
+
+Confirm that no expected node Certificate Signing Requests remain pending.
+
+### Verify API Access
+
+```bash
 oc whoami
+
+oc get --raw='/readyz?verbose'
+```
+
+A successful response confirms connectivity to the Kubernetes API server and its readiness checks.
+
+### Verify OpenShift Web Console
+
+```bash
 oc whoami --show-console
 ```
 
-**Screenshot**
+Confirm that the returned console URL is accessible from a web browser.
 
-> `images/18-final-validation.png`
+---
+
+### Final Cluster Health Check
+
+Run the primary validation commands together for a final overview of the deployed environment.
+
+```bash
+echo "===== CLUSTER NODES ====="
+oc get nodes
+
+echo
+echo "===== CLUSTER OPERATORS ====="
+oc get co
+
+echo
+echo "===== CLUSTER VERSION ====="
+oc get clusterversion
+
+echo
+echo "===== PENDING CSRs ====="
+oc get csr | grep Pending || echo "No Pending CSRs"
+
+echo
+echo "===== WEB CONSOLE ====="
+oc whoami --show-console
+```
+
+### Output
+
+![Final OpenShift Cluster Validation](images/21-final-validation.PNG)
+
+> **Figure 30.** Final validation of the OpenShift cluster confirming node readiness, Cluster Operator health, installed OpenShift version, CSR status, and Web Console availability.
+
+### Validation Summary
+
+| Validation | Expected Status |
+|------------|-----------------|
+| Control Plane Nodes | `Ready` |
+| Worker Nodes | `Ready` |
+| Cluster Operators | `Available=True` |
+| Cluster Operators | `Progressing=False` |
+| Cluster Operators | `Degraded=False` |
+| Cluster Version | Expected OpenShift 4.21 release |
+| Pending CSRs | None expected |
+| Kubernetes API | Ready |
+| Web Console | Accessible |
+
+### Installation Status
+
+> ✅ **OpenShift Container Platform 4.21 UPI deployment completed successfully on VMware vSphere ESXi.**
+
+The cluster has successfully passed infrastructure, node, operator, API, and Web Console validation and is ready for Day-2 platform configuration and enterprise workloads.
 
 ---
 
