@@ -307,8 +307,129 @@ timedatectl
 
 ## Step 02: Bastion Host Preparation
 
-> Installation commands and screenshots will be added during the actual deployment.
+Prepare the bastion host with the utilities required for the OpenShift 4.21 Single Node OpenShift deployment.
 
+The bastion host will be used to generate the Agent-Based Installer ISO, manage installation configuration files, monitor the installation, and administer the SNO cluster.
+
+### Install Required Packages
+
+Update the bastion host and install the required utilities.
+
+```bash
+sudo dnf update -y
+
+sudo dnf install -y \
+wget \
+curl \
+tar \
+git \
+jq \
+bind-utils \
+chrony \
+python3
+```
+
+### Output
+
+![Bastion Required Packages](images/02-bastion-packages.PNG)
+
+> **Figure 2.** Required packages installed successfully on the SNO bastion host.
+
+---
+
+### Enable Time Synchronization
+
+Enable and start the Chrony service.
+
+```bash
+sudo systemctl enable --now chronyd
+```
+
+Verify the service status:
+
+```bash
+systemctl is-active chronyd
+```
+
+Expected result:
+
+```text
+active
+```
+
+Verify the configured time sources:
+
+```bash
+chronyc sources -v
+```
+
+Verify system time synchronization:
+
+```bash
+timedatectl
+```
+
+### Output
+
+![Bastion Time Synchronization](images/03-bastion-time-sync.PNG)
+
+> **Figure 3.** Chrony service and system time synchronization verified on the bastion host.
+
+---
+
+### Verify Required Utilities
+
+Confirm that the required commands are available.
+
+```bash
+for cmd in wget curl tar git jq dig nslookup python3; do
+    printf "%-12s : " "$cmd"
+    command -v "$cmd" || echo "NOT FOUND"
+done
+```
+
+### Expected Result
+
+Each required utility should return its installed executable path.
+
+Example:
+
+```text
+wget         : /usr/bin/wget
+curl         : /usr/bin/curl
+tar          : /usr/bin/tar
+git          : /usr/bin/git
+jq           : /usr/bin/jq
+dig          : /usr/bin/dig
+nslookup     : /usr/bin/nslookup
+python3      : /usr/bin/python3
+```
+
+### Output
+
+![Bastion Utilities Verification](images/04-bastion-utilities.PNG)
+
+> **Figure 4.** Verification of the utilities required for the Agent-Based SNO installation.
+
+---
+
+### Validation
+
+- Required bastion packages are installed.
+- Chrony service is enabled and running.
+- System time is synchronized.
+- `wget`, `curl`, `tar`, `git`, and `jq` are available.
+- `dig` and `nslookup` are available for DNS troubleshooting.
+- Python 3 is available.
+- Bastion host is ready for the OpenShift installation tools.
+
+### Notes
+
+- `bind-utils` provides `dig` and `nslookup`, which will be used extensively during DNS validation.
+- Accurate time synchronization is important for TLS certificates and OpenShift services.
+- The OpenShift Client (`oc`), `kubectl`, and `openshift-install` binaries will be installed separately in the next installation-tools step.
+
+---
 ---
 
 ## Step 03: DNS Configuration
