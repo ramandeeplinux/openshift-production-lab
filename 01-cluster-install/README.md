@@ -1164,7 +1164,87 @@ The control plane nodes should have the `master` / `control-plane` role and comp
 
 ### Step 14: Verify Cluster Operators
 
-> `images/15-cluster-operators.png`
+After verifying that all cluster nodes are in the `Ready` state, validate the health of the OpenShift Cluster Operators.
+
+Cluster Operators manage the core platform components such as authentication, networking, ingress, monitoring, storage, DNS, the API server, and the Machine Config Operator.
+
+### Verify Cluster Operator Status
+
+Run the following command from the bastion host.
+
+### Commands
+
+```bash
+export KUBECONFIG=~/ocp-install/auth/kubeconfig
+
+oc get co
+```
+
+### Output
+
+![OpenShift Cluster Operators](images/18-cluster-operators.PNG)
+
+> **Figure 27.** OpenShift Cluster Operators reporting their availability, progressing, and degraded status after cluster deployment.
+
+---
+
+### Expected Result
+
+For a healthy and stable OpenShift cluster, Cluster Operators should normally report:
+
+```text
+AVAILABLE   PROGRESSING   DEGRADED
+True        False         False
+```
+
+The important status fields are:
+
+| Status | Expected Value | Description |
+|--------|----------------|-------------|
+| Available | `True` | Operator is available and functioning |
+| Progressing | `False` | Operator is not performing an ongoing rollout or update |
+| Degraded | `False` | Operator is not reporting a degraded condition |
+
+---
+
+### Check Degraded Operators
+
+Verify whether any Cluster Operator is reporting a degraded condition.
+
+### Commands
+
+```bash
+oc get co | grep -v "True.*False.*False"
+```
+
+If an operator requires further investigation, inspect its detailed status.
+
+```bash
+oc describe co <operator-name>
+```
+
+For example:
+
+```bash
+oc describe co network
+```
+
+---
+
+### Validation
+
+- All expected Cluster Operators are present.
+- `AVAILABLE` is `True`.
+- `PROGRESSING` is `False` after the cluster has stabilized.
+- `DEGRADED` is `False`.
+- No operator reports persistent errors or unavailable platform components.
+
+### Notes
+
+- Some operators can temporarily report `Progressing=True` during initial cluster installation.
+- Allow sufficient time for operators to stabilize after the control plane and worker nodes become available.
+- Persistent `Degraded=True` conditions should be investigated before the cluster is considered healthy.
+- Use `oc describe co <operator-name>` to review detailed status messages for an unhealthy operator.
 
 ---
 
