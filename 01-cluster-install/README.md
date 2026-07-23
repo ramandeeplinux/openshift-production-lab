@@ -1320,8 +1320,84 @@ This provides detailed information about the current release, update history, av
 
 ### Step 16: Access OpenShift Web Console
 
-> `images/17-web-console.png`
+After validating the cluster nodes, Cluster Operators, and OpenShift version, access the OpenShift Web Console to verify that the cluster is available through the graphical management interface.
 
+The OpenShift Web Console provides a centralized interface for managing cluster resources, workloads, operators, networking, storage, monitoring, and other platform components.
+
+### Get the OpenShift Console URL
+
+Run the following command from the bastion host to retrieve the OpenShift Web Console URL.
+
+### Commands
+
+```bash
+export KUBECONFIG=~/ocp-install/auth/kubeconfig
+
+oc whoami --show-console
+```
+
+### Expected Output
+
+The command returns the OpenShift Web Console URL.
+
+```text
+https://console-openshift-console.apps.ocp4.example.com
+```
+
+> **Note:** The actual console URL depends on the cluster name and base domain configured during installation.
+
+---
+
+### Verify Console Route
+
+Verify that the OpenShift Console route is available.
+
+### Commands
+
+```bash
+oc get route console -n openshift-console
+```
+
+The console route should display the hostname used to access the OpenShift Web Console.
+
+---
+
+### Access the Web Console
+
+Open the URL returned by `oc whoami --show-console` in a web browser and authenticate using a valid OpenShift user account.
+
+For the initial installation, the temporary `kubeadmin` credentials can be retrieved from the installation directory if required.
+
+```bash
+cat ~/ocp-install/auth/kubeadmin-password
+```
+
+> **Security Note:** Never publish the `kubeadmin` password, authentication tokens, pull secrets, private keys, or other credentials in screenshots or a public GitHub repository.
+
+### Output
+
+![OpenShift Web Console](images/20-openshift-web-console.PNG)
+
+> **Figure 29.** Successfully authenticated OpenShift Web Console showing the deployed OpenShift Container Platform cluster.
+
+The successful Web Console login confirms that the console route, ingress services, authentication components, and application wildcard DNS are functioning correctly.
+
+### Validation
+
+- OpenShift Console URL resolves successfully.
+- Console route is available.
+- Web Console loads successfully in the browser.
+- Authentication is successful.
+- Cluster dashboard is accessible.
+- No critical cluster health warnings are present.
+
+### Notes
+
+- Ensure the wildcard `*.apps` DNS record resolves correctly.
+- Verify the Ingress Operator if the console route is inaccessible.
+- Use `oc get co console authentication ingress` when troubleshooting console access.
+- Replace the temporary `kubeadmin` account with enterprise identity-provider authentication for long-term administration.
+- Never expose credentials or authentication tokens in GitHub screenshots.
 ---
 
 ## ✅ Final Validation
